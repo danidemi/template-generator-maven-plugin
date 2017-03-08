@@ -1,4 +1,4 @@
-package com.danidemi.templategeneratormavenplugin.generation;
+package com.danidemi.templategeneratormavenplugin.demo;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
