@@ -16,21 +16,20 @@ import java.util.function.Function;
  */
 public class CsvContextCreator implements ContextCreator {
 
+    private final String resourcePath;
 
+    public CsvContextCreator(String resourcePath) {
+        this.resourcePath = resourcePath;
+    }
 
     @Override public Iterator<Map<String, Object>> iterator() {
         try {
-            Reader in = new FileReader(getClass().getResource("/file.csv").getFile());
+            Reader in = new FileReader(getClass().getResource(resourcePath).getFile());
             CSVParser parse = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(in);
 
             Iterator<CSVRecord> iterator = parse.iterator();
 
             // get the headers
-//            CSVRecord headers = iterator.next();
-//            Iterable<String> iterable = () -> headers.iterator();
-//            Stream<String> targetStream = StreamSupport.stream(iterable.spliterator(), false);
-//            List<String> headersAsList = targetStream.collect(Collectors.toList());
-
             List<String> headersAsList = new ArrayList<>( parse.getHeaderMap().keySet() );
 
             return new IteratorAdapter< CSVRecord, Map<String, Object> >(iterator,

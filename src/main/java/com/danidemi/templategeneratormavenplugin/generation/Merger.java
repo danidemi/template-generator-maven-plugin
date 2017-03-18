@@ -10,12 +10,12 @@ public class Merger {
 
     private final TemplateFromClasspath template;
     private final ContextCreator contexts;
-    private final Storage storage;
+    private final FileStore fileStore;
 
-    public Merger(TemplateFromClasspath template, ContextCreator contexts, Storage storage) {
+    public Merger(TemplateFromClasspath template, ContextCreator contexts, FileStore fileStore) {
         this.template = template;
         this.contexts = contexts;
-        this.storage = storage;
+        this.fileStore = fileStore;
     }
 
     private void merge() {
@@ -29,7 +29,7 @@ public class Merger {
             StringWriter content = mergeTemplateIntoStringWriter(templateReader, context);
 
             // store the file
-            storage.store(content);
+            fileStore.store(content);
 
         }
     }

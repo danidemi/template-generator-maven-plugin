@@ -5,11 +5,17 @@ import java.io.*;
 /**
  * Store a generated source.
  */
-public class Storage {
+public class FileStore {
+
+    private final File folder;
+
+    public FileStore(File folder) {
+        this.folder = folder;
+    }
 
     public void store(StringWriter content) {
         try {
-            File file = new File("thepath");
+            File file = new File( folder, "thepath");
             FileOutputStream fos = new FileOutputStream(file);
             byte[] bytes = content.toString().getBytes();
             fos.write(bytes);

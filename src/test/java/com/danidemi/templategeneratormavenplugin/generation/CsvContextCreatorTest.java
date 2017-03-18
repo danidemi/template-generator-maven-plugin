@@ -11,9 +11,32 @@ import static org.junit.Assert.assertThat;
 
 public class CsvContextCreatorTest {
 
+    @Test public void produceContextFromAnotherCsvFile() {
+
+        CsvContextCreator sut = new CsvContextCreator("/codeAndCurrency.csv");
+
+        Iterator<Map<String, Object>> ctxIt = sut.iterator();
+
+        Map<String, Object> ctx;
+        ctx = ctxIt.next();
+        assertThat( ctx.get("Code"), equalTo("EUR") );
+        assertThat( ctx.get("Currency"), equalTo("Euro") );
+
+        ctx = ctxIt.next();
+        assertThat( ctx.get("Code"), equalTo("USD") );
+        assertThat( ctx.get("Currency"), equalTo("Dollar") );
+
+        ctx = ctxIt.next();
+        assertThat( ctx.get("Code"), equalTo("GBP") );
+        assertThat( ctx.get("Currency"), equalTo("Pound") );
+
+        assertThat(ctxIt.hasNext(), is(false));
+
+    }
+
     @Test public void produceAContextForEachRowInCsvFile() {
 
-        CsvContextCreator sut = new CsvContextCreator();
+        CsvContextCreator sut = new CsvContextCreator("/codeAndCountry.csv");
 
         Iterator<Map<String, Object>> ctxIt = sut.iterator();
 
