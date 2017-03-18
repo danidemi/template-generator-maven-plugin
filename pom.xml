@@ -31,6 +31,15 @@
             <version>3.2</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- Allow to test a Mojo against a defined pom.xml -->
+        <!-- versions: https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.apache.maven.plugin-testing%22%20AND%20a%3A%22maven-plugin-testing-harness%22 -->
+        <dependency>
+            <groupId>org.apache.maven.plugin-testing</groupId>
+            <artifactId>maven-plugin-testing-harness</artifactId>
+            <version>3.3.0</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-utils</artifactId>
