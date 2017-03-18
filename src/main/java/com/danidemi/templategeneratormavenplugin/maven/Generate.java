@@ -1,4 +1,4 @@
-package com.danidemi.templategeneratormavenplugin;
+package com.danidemi.templategeneratormavenplugin.maven;
 
 import com.danidemi.templategeneratormavenplugin.generation.ContextCreator;
 import com.danidemi.templategeneratormavenplugin.generation.Templating;

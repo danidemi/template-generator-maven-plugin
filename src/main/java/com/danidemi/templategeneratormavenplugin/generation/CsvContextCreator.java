@@ -10,10 +10,10 @@ import java.io.Reader;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
+/**
+ * Creates one context for each line in a CSV.
+ */
 public class CsvContextCreator implements ContextCreator {
 
 
@@ -26,15 +26,17 @@ public class CsvContextCreator implements ContextCreator {
             Iterator<CSVRecord> iterator = parse.iterator();
 
             // get the headers
-            CSVRecord headers = iterator.next();
-            Iterable<String> iterable = () -> headers.iterator();
-            Stream<String> targetStream = StreamSupport.stream(iterable.spliterator(), false);
-            List<String> collect = targetStream.collect(Collectors.toList());
+//            CSVRecord headers = iterator.next();
+//            Iterable<String> iterable = () -> headers.iterator();
+//            Stream<String> targetStream = StreamSupport.stream(iterable.spliterator(), false);
+//            List<String> headersAsList = targetStream.collect(Collectors.toList());
+
+            List<String> headersAsList = new ArrayList<>( parse.getHeaderMap().keySet() );
 
             return new IteratorAdapter< CSVRecord, Map<String, Object> >(iterator,
                     (record) -> {
                         HashMap mapped = new HashMap<Object, String>();
-                        collect.forEach( h-> mapped.put(h, record.get(h)) );
+                        headersAsList.forEach( header -> mapped.put(header, record.get(header)) );
                         return mapped;
                     }
             );

@@ -12,10 +12,10 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.URL;
 
-public class TemplateRun {
+public class VelocityPlainDemo {
 
     public static void main(String[] args) {
-        new TemplateRun().run();
+        new VelocityPlainDemo().run();
     }
 
     private void run() {
@@ -27,12 +27,9 @@ public class TemplateRun {
         try {
             resource = getClass().getResource("/mytemplate.vm");
             System.out.println(resource);
-            String file = new File( resource.getFile() ).getAbsolutePath();
+            String file = new File(resource.getFile()).getAbsolutePath();
             System.out.println(file);
-
-            //template = Velocity.getTemplate(file);
             StringWriter sw = new StringWriter();
-            //template.merge(context, sw);
             Velocity.evaluate(context, sw, "logtag", new InputStreamReader(resource.openStream()));
             System.out.println(sw);
         } catch (ResourceNotFoundException rnfe) {
@@ -43,6 +40,7 @@ public class TemplateRun {
             // something invoked in the template
             // threw an exception
         } catch (Exception e) {
+            // other problems here
         }
     }
 

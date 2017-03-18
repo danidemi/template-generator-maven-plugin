@@ -2,7 +2,11 @@ package com.danidemi.templategeneratormavenplugin.generation;
 
 import java.io.*;
 
+/**
+ * Store a generated source.
+ */
 public class Storage {
+
     public void store(StringWriter content) {
         try {
             File file = new File("thepath");
@@ -14,4 +18,5 @@ public class Storage {
             throw new RuntimeException(e);
         }
     }
+
 }
