@@ -1,30 +1,67 @@
 package com.danidemi.templategeneratormavenplugin.maven;
 
-import com.danidemi.templategeneratormavenplugin.generation.ContextCreator;
-import com.danidemi.templategeneratormavenplugin.generation.Templating;
+import com.danidemi.templategeneratormavenplugin.generation.CsvContextCreator;
+import com.danidemi.templategeneratormavenplugin.generation.FileStore;
+import com.danidemi.templategeneratormavenplugin.generation.Merger;
+import com.danidemi.templategeneratormavenplugin.generation.Template;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-@Mojo(name = "generate") public class Generate extends AbstractMojo {
+import java.io.File;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.util.Map;
 
-    @Parameter( property = "context")
-    private String template;
+@Mojo(name = "generate")
+public class Generate extends AbstractMojo {
 
-    @Parameter
-    private ContextCreator contexts;
+    Log log = getLog();
 
-    @Parameter( property = "template")
-    private Templating templating;
+    @Parameter( property = "generate.pathToCsv", defaultValue = "/default.csv" )
+    private String pathToCsv;
 
-    @Parameter( property = "output" )
-    private String outputPath;
+    @Parameter( property = "generate.pathToTemplate", defaultValue = "/default.csv" )
+    private String pathToTemplate;
+
+    @Parameter( property = "generate.pathToOutputFolder", defaultValue = "${build.directory}/generated-sources" )
+    private String pathToOutputFolder;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
 
+        String pathToCsv = this.pathToCsv;
+        String pathToTemplate = this.pathToTemplate;
+        String pathToOutputFolder = this.pathToOutputFolder;
 
+        log.info("Path to CSV: '" + pathToCsv + "'");
+        log.info("Path to Template: '" + pathToTemplate + "'");
+        log.info("Path to output: '" + pathToOutputFolder + "'");
+
+        log.info("START");
+        CsvContextCreator ctxs = CsvContextCreator.fromFilepath(pathToCsv);
+        Template tfc = Template.fromFilePath(pathToTemplate);
+        FileStore fs = new FileStore( new File(pathToOutputFolder) );
+        Reader templateReader = tfc.asReader();
+        Merger m = new Merger(tfc, ctxs, fs);
+
+        // get the contexts
+        for (Map<String, Object> context : ctxs) {
+
+            // build the content
+            StringWriter content = m.mergeTemplateIntoStringWriter(templateReader, context);
+
+            log.info("content:\n" + content);
+
+            // store the file
+            fs.store(content);
+
+        }
+
+        m.merge();
+        log.info("END");
 
 
     }

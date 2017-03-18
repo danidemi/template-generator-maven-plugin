@@ -8,17 +8,17 @@ import java.util.Map;
 
 public class Merger {
 
-    private final TemplateFromClasspath template;
+    private final Template template;
     private final ContextCreator contexts;
     private final FileStore fileStore;
 
-    public Merger(TemplateFromClasspath template, ContextCreator contexts, FileStore fileStore) {
+    public Merger(Template template, ContextCreator contexts, FileStore fileStore) {
         this.template = template;
         this.contexts = contexts;
         this.fileStore = fileStore;
     }
 
-    private void merge() {
+    public void merge() {
 
         Reader templateReader = template.asReader();
 
@@ -34,7 +34,7 @@ public class Merger {
         }
     }
 
-    private StringWriter mergeTemplateIntoStringWriter(Reader inputStreamReader, Map<String, Object> context) {
+    public StringWriter mergeTemplateIntoStringWriter(Reader inputStreamReader, Map<String, Object> context) {
         StringWriter sw = new StringWriter();
         final VelocityContext vcontext = new VelocityContext();
         context.forEach( (k,v) -> vcontext.put(k,v)  );

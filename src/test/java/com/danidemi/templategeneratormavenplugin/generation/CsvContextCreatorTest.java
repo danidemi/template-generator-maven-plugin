@@ -11,9 +11,13 @@ import static org.junit.Assert.assertThat;
 
 public class CsvContextCreatorTest {
 
+    @Test(expected = IllegalArgumentException.class) public void failWhenSourceDoesNotExist() {
+        CsvContextCreator sut = CsvContextCreator.fromClasspath("/does-not-exists");
+    }
+
     @Test public void produceContextFromAnotherCsvFile() {
 
-        CsvContextCreator sut = new CsvContextCreator("/codeAndCurrency.csv");
+        CsvContextCreator sut = CsvContextCreator.fromClasspath("/codeAndCurrency.csv");
 
         Iterator<Map<String, Object>> ctxIt = sut.iterator();
 
@@ -36,7 +40,7 @@ public class CsvContextCreatorTest {
 
     @Test public void produceAContextForEachRowInCsvFile() {
 
-        CsvContextCreator sut = new CsvContextCreator("/codeAndCountry.csv");
+        CsvContextCreator sut = CsvContextCreator.fromClasspath("/codeAndCountry.csv");
 
         Iterator<Map<String, Object>> ctxIt = sut.iterator();
 

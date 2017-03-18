@@ -1,0 +1,4 @@
+// class $Country
+public class $Country {
+    private String $Code;
+}

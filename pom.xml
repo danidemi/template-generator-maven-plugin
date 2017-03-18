@@ -1,5 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.danidemi</groupId>
@@ -9,7 +10,6 @@
 
     <name>template-generator-maven-plugin</name>
 
-    <!-- FIXME change it to the project's website -->
     <url>https://github.com/danidemi/template-generator-maven-plugin</url>
 
     <properties>
@@ -57,6 +57,12 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>${project.artifactId}</artifactId>
+                <version>${project.version}</version>
+            </plugin>
+            <!--
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
                 <version>3.5</version>
@@ -79,9 +85,36 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
+            <!--
+            maven-plugin-plugin
+            * Needed if one want to use annotations.
+            * URL: https://maven.apache.org/plugin-tools/maven-plugin-plugin
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-plugin-plugin</artifactId>
+                <version>3.5</version>
+                <executions>
+                    <execution>
+                        <id>default-descriptor</id>
+                        <phase>process-classes</phase>
+                    </execution>
+                    <!-- if you want to generate help goal -->
+                    <!--
+                    <execution>
+                        <id>help-goal</id>
+                        <goals>
+                            <goal>helpmojo</goal>
+                        </goals>
+                    </execution>
+                    -->
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <profiles>
+        <!--
         <profile>
             <id>run-its</id>
             <build>
@@ -90,7 +123,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-invoker-plugin</artifactId>
-                        <version>1.7</version>
+                        <version>2.0.0</version>
                         <configuration>
                             <debug>true</debug>
                             <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
@@ -120,5 +153,6 @@
 
             </build>
         </profile>
+        -->
     </profiles>
 </project>
