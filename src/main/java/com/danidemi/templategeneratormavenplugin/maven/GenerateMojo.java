@@ -16,7 +16,7 @@ import java.io.StringWriter;
 import java.util.Map;
 
 @Mojo(name = "generate")
-public class Generate extends AbstractMojo {
+public class GenerateMojo extends AbstractMojo {
 
     Log log = getLog();
 
