@@ -12,7 +12,6 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
-import java.io.Reader;
 import java.io.StringWriter;
 import java.util.Map;
 
@@ -44,14 +43,13 @@ public class Generate extends AbstractMojo {
         CsvContextCreator ctxs = CsvContextCreator.fromFilepath(pathToCsv);
         Template tfc = Template.fromFilePath(pathToTemplate);
         FileStore fs = new FileStore( new File(pathToOutputFolder) );
-        Reader templateReader = tfc.asReader();
         Merger m = new Merger(tfc, ctxs, fs);
 
         // get the contexts
         for (Map<String, Object> context : ctxs) {
 
             // build the content
-            StringWriter content = m.mergeTemplateIntoStringWriter(templateReader, context);
+            StringWriter content = m.mergeTemplateIntoStringWriter(tfc.asReader(), context);
 
             log.info("content:\n" + content);
 
