@@ -1,9 +1,6 @@
 package com.danidemi.templategeneratormavenplugin.maven;
 
-import com.danidemi.templategeneratormavenplugin.generation.CsvContextCreator;
-import com.danidemi.templategeneratormavenplugin.generation.FileStore;
-import com.danidemi.templategeneratormavenplugin.generation.Merger;
-import com.danidemi.templategeneratormavenplugin.generation.Template;
+import com.danidemi.templategeneratormavenplugin.generation.*;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -18,7 +15,12 @@ import java.util.Map;
 @Mojo(name = "generate")
 public class GenerateMojo extends AbstractMojo {
 
-    Log log = getLog();
+    public enum ContextMode {
+        ONE_CONTEXT_PER_LINE,
+        ONE_CONTEXT_PER_CSV
+    }
+
+    private Log log = getLog();
 
     @Parameter( property = "generate.pathToCsv", defaultValue = "/default.csv" )
     private String pathToCsv;
@@ -29,6 +31,9 @@ public class GenerateMojo extends AbstractMojo {
     @Parameter( property = "generate.pathToOutputFolder", defaultValue = "${build.directory}/generated-sources" )
     private String pathToOutputFolder;
 
+    @Parameter( property = "generate.contextMode")
+    private ContextMode contextMode;
+
     public void execute() throws MojoExecutionException, MojoFailureException {
 
         String pathToCsv = this.pathToCsv;
@@ -38,9 +43,19 @@ public class GenerateMojo extends AbstractMojo {
         log.info("Path to CSV: '" + pathToCsv + "'");
         log.info("Path to Template: '" + pathToTemplate + "'");
         log.info("Path to output: '" + pathToOutputFolder + "'");
+        log.info("CTX mode: '" + this.contextMode + "'");
 
         log.info("START");
-        CsvContextCreator ctxs = CsvContextCreator.fromFilepath(pathToCsv);
+
+        ContextCreator ctxs;
+        if (this.contextMode == ContextMode.ONE_CONTEXT_PER_CSV) {
+            ctxs = OneContextPerCsvFile.fromFilepath(pathToCsv);
+        } else if (this.contextMode == ContextMode.ONE_CONTEXT_PER_LINE) {
+            ctxs = OneContextPerCsvLine.fromFilepath(pathToCsv);
+        } else{
+            throw new IllegalStateException("Unsupported mode");
+        }
+
         Template tfc = Template.fromFilePath(pathToTemplate);
         FileStore fs = new FileStore( new File(pathToOutputFolder) );
         Merger m = new Merger(tfc, ctxs, fs);

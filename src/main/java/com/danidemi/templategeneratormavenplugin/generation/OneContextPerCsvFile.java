@@ -19,27 +19,27 @@ import static com.danidemi.templategeneratormavenplugin.utils.Preconditions.vali
 /**
  * Creates one context for each line in a CSV.
  */
-public class CsvContextCreator implements ContextCreator {
+public class OneContextPerCsvFile implements ContextCreator {
 
     private final String filePath;
 
-    private CsvContextCreator(String resourcePath) {
+    private OneContextPerCsvFile(String resourcePath) {
         checkArgument(resourcePath != null && !resourcePath.trim().isEmpty(), "File '%s' not valid.", resourcePath);
         this.filePath = resourcePath;
     }
 
-    public static CsvContextCreator fromClasspath(String resourcePath) {
-        URL resource = CsvContextCreator.class.getResource(resourcePath);
+    public static OneContextPerCsvFile fromClasspath(String resourcePath) {
+        URL resource = OneContextPerCsvFile.class.getResource(resourcePath);
         checkArgument(resource != null, "Resource '%s' does not exist.", resourcePath);
         String file = resource.getFile();
-        return new CsvContextCreator(file);
+        return new OneContextPerCsvFile(file);
     }
 
-    public static CsvContextCreator fromFilepath(String resourcePath) {
+    public static OneContextPerCsvFile fromFilepath(String resourcePath) {
         File f = new File(resourcePath);
         checkArgument(f.exists(), "File '%s' does not exist.", resourcePath);
         checkArgument(f.canRead(), "File '%s' is not readable.", resourcePath);
-        return new CsvContextCreator(f.getAbsolutePath());
+        return new OneContextPerCsvFile(f.getAbsolutePath());
     }
 
     @Override public Iterator<Map<String, Object>> iterator() {
@@ -49,18 +49,33 @@ public class CsvContextCreator implements ContextCreator {
             Reader in = new FileReader(filePath);
             CSVParser parser = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(in);
 
-            Iterator<CSVRecord> iterator = parser.iterator();
-
             // get the headers
             List<String> headersAsList = new ArrayList<>( parser.getHeaderMap().keySet() );
 
-            return new IteratorAdapter< CSVRecord, Map<String, Object> >(iterator,
-                    (record) -> {
-                        HashMap mapped = new HashMap<Object, String>();
-                        headersAsList.forEach( header -> mapped.put(header, record.get(header)) );
-                        return mapped;
-                    }
-            );
+
+            ArrayList<Map<String, Object>> ctx = new ArrayList<>();
+
+            int index = 0;
+            for(CSVRecord record : parser){
+                HashMap mapped = new HashMap<Object, String>();
+                headersAsList.forEach( header -> mapped.put(header, record.get(header)) );
+
+                mapped.put("RowIndex", index);
+                mapped.put("RowCount", index+1);
+
+                ctx.add( mapped );
+                index++;
+            }
+
+            HashMap<String, Object> r = new HashMap<>();
+            r.put("File", ctx);
+            r.put("TotalRows", index);
+            r.put("LastIndex", index-1);
+
+            List<Map<String, Object>> rr = new ArrayList<>();
+            rr.add(r);
+
+            return rr.iterator();
 
         } catch (IOException e) {
             throw new RuntimeException(e);

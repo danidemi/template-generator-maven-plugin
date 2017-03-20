@@ -8,6 +8,15 @@ A Maven plugin that generates code using template engines.
 * Maven Velocity Author Guide <https://velocity.apache.org/engine/devel/user-guide.html> 
 * Maven Velocity Dev Guide <https://velocity.apache.org/engine/devel/developer-guide.html#the-fundamental-pattern>
 
+## Use
+
+    <plugin>
+        <groupId>com.danidemi</groupId>
+        <artifactId>template-generator-maven-plugin</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </plugin>
+    
+
 ## Dev Notes
 
     mvn com.danidemi:template-generator-maven-plugin:0.0.1-SNAPSHOT:generate

@@ -9,15 +9,15 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class CsvContextCreatorTest {
+public class OneContextPerCsvLineTest {
 
     @Test(expected = IllegalArgumentException.class) public void failWhenSourceDoesNotExist() {
-        CsvContextCreator sut = CsvContextCreator.fromClasspath("/does-not-exists");
+        OneContextPerCsvLine sut = OneContextPerCsvLine.fromClasspath("/does-not-exists");
     }
 
     @Test public void produceContextFromAnotherCsvFile() {
 
-        CsvContextCreator sut = CsvContextCreator.fromClasspath("/codeAndCurrency.csv");
+        OneContextPerCsvLine sut = OneContextPerCsvLine.fromClasspath("/codeAndCurrency.csv");
 
         Iterator<Map<String, Object>> ctxIt = sut.iterator();
 
@@ -40,7 +40,7 @@ public class CsvContextCreatorTest {
 
     @Test public void produceAContextForEachRowInCsvFile() {
 
-        CsvContextCreator sut = CsvContextCreator.fromClasspath("/codeAndCountry.csv");
+        OneContextPerCsvLine sut = OneContextPerCsvLine.fromClasspath("/codeAndCountry.csv");
 
         Iterator<Map<String, Object>> ctxIt = sut.iterator();
 
