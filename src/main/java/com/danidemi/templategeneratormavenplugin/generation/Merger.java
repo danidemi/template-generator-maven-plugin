@@ -29,7 +29,8 @@ public class Merger {
             StringWriter content = mergeTemplateIntoStringWriter(templateReader, context);
 
             // store the file
-            fileStore.store(content);
+            String fileName = "thepath." + (int) (Math.random() * 100) + ".java";
+            fileStore.storeContentToFile(content, fileName);
 
         }
     }
@@ -40,5 +41,9 @@ public class Merger {
         context.forEach( (k,v) -> vcontext.put(k,v)  );
         Velocity.evaluate(vcontext, sw, "logtag", inputStreamReader);
         return sw;
+    }
+
+    public StringWriter mergeTemplateIntoStringWriter(String inputStreamReader, Map<String, Object> context) {
+        return mergeTemplateIntoStringWriter( new StringReader(inputStreamReader), context );
     }
 }

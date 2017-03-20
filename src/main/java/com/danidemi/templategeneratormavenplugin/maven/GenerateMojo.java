@@ -34,6 +34,9 @@ public class GenerateMojo extends AbstractMojo {
     @Parameter( property = "generate.contextMode")
     private ContextMode contextMode;
 
+    @Parameter( property = "generate.fileNameTemplate", required = true)
+    private String fileNameTemplate;
+
     public void execute() throws MojoExecutionException, MojoFailureException {
 
         String pathToCsv = this.pathToCsv;
@@ -44,6 +47,7 @@ public class GenerateMojo extends AbstractMojo {
         log.info("Path to Template: '" + pathToTemplate + "'");
         log.info("Path to output: '" + pathToOutputFolder + "'");
         log.info("CTX mode: '" + this.contextMode + "'");
+        log.info("FileName template: '" + fileNameTemplate + "'");
 
         log.info("START");
 
@@ -58,22 +62,24 @@ public class GenerateMojo extends AbstractMojo {
 
         Template tfc = Template.fromFilePath(pathToTemplate);
         FileStore fs = new FileStore( new File(pathToOutputFolder) );
-        Merger m = new Merger(tfc, ctxs, fs);
+        Merger contentMerger = new Merger(tfc, ctxs, fs);
+        EasyMerger fileNameMerger = new EasyMerger();
 
         // get the contexts
         for (Map<String, Object> context : ctxs) {
 
             // build the content
-            StringWriter content = m.mergeTemplateIntoStringWriter(tfc.asReader(), context);
+            StringWriter content = contentMerger.mergeTemplateIntoStringWriter(tfc.asReader(), context);
 
             log.info("content:\n" + content);
 
             // store the file
-            fs.store(content);
+            String fileName = fileNameMerger.mergeTemplateIntoStringWriter(this.fileNameTemplate, context).toString();
+            fs.storeContentToFile(content, fileName);
 
         }
 
-        m.merge();
+
         log.info("END");
 
 

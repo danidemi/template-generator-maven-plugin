@@ -11,20 +11,18 @@ public class FileStore {
 
     private final File folder;
 
-    public FileStore(File folder) {
-        this.folder = folder;
+    public FileStore(File baseFolder) {
+        this.folder = baseFolder;
     }
 
-    public void store(StringWriter content) {
-        folder.mkdirs();
-        try {
-            File file = new File( folder, "thepath." + (int)(Math.random()*100) + ".java");
-//            FileOutputStream fos = new FileOutputStream(file);
-//            byte[] bytes = content.toString().getBytes();
-//            fos.write(bytes);
-//            fos.flush();
-//            fos.close();
+    public void storeContentToFile(StringWriter content, String fileName) {
 
+        String completePath = folder.getAbsolutePath() + (fileName.startsWith(File.separator) ? "" : File.separator) + fileName;
+
+        try {
+            File file = new File( completePath );
+            File dir = file.getParentFile();
+            dir.mkdirs();
             FileUtils.fileWrite(file, content.toString());
 
         } catch (IOException e) {

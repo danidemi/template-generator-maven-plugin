@@ -81,11 +81,13 @@
 
     <build>
         <plugins>
+            <!--
             <plugin>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>${project.artifactId}</artifactId>
                 <version>${project.version}</version>
             </plugin>
+            -->
             <!--
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
