@@ -11,6 +11,11 @@
     <name>template-generator-maven-plugin</name>
     <description>Generates code and text content merging data from CSV files with a Velocity template.</description>
     <url>https://github.com/danidemi/template-generator-maven-plugin</url>
+    <inceptionYear>2017</inceptionYear>
+    <organization>
+        <name>Studio DaniDemi</name>
+        <url>http://danidemi.com</url>
+    </organization>
 
     <licenses>
         <license>
@@ -128,7 +133,6 @@
 
 
 
-
             <!--
             <plugin>
                 <groupId>${project.groupId}</groupId>
@@ -192,6 +196,51 @@
 
             <build>
                 <plugins>
+
+                    <!-- Manages the license of a maven project. -->
+                    <!-- Doc:    http://www.mojohaus.org/license-maven-plugin/index.html -->
+                    <!-- Latest: https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.codehaus.mojo%22%20AND%20a%3A%22license-maven-plugin%22 -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
+                        <version>1.12</version>
+                        <configuration>
+                            <verbose>false</verbose>
+                            <addSvnKeyWords>true</addSvnKeyWords>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>first</id>
+                                <goals>
+                                    <goal>update-file-header</goal>
+                                </goals>
+                                <phase>process-sources</phase>
+                                <configuration>
+                                    <!--
+                                    * agpl_v3   : GNU Affero General Public License (AGPL) version 3.0
+                                    * apache_v2 : Apache License version 2.0
+                                    * bsd_2     : BSD 2-Clause License
+                                    * bsd_3     : BSD 3-Clause License
+                                    * cddl_v1   : COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+                                    * epl_v1    : Eclipse Public License - v 1.0
+                                    * eupl_v1_1 : European Union Public License v1.1
+                                    * fdl_v1_3  : GNU Free Documentation License (FDL) version 1.3
+                                    * gpl_v1    : GNU General Public License (GPL) version 1.0
+                                    * gpl_v2    : GNU General Public License (GPL) version 2.0
+                                    * gpl_v3    : GNU General Public License (GPL) version 3.0
+                                    * lgpl_v2_1 : GNU General Lesser Public License (LGPL) version 2.1
+                                    * lgpl_v3   : GNU General Lesser Public License (LGPL) version 3.0
+                                    * mit       : MIT-License
+                                    -->
+                                    <licenseName>apache_v2</licenseName>
+                                    <roots>
+                                        <root>src/main/java</root>
+                                        <root>src/test/java</root>
+                                    </roots>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
 
                     <!-- https://maven.apache.org/plugins/maven-source-plugin/ -->
                     <!-- Creates a jar archive of the source files of the current project. -->
