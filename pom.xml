@@ -131,6 +131,15 @@
                 </configuration>
             </plugin>
 
+            <!--
+            mvn org.pitest:pitest-maven:mutationCoverage
+            -->
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>1.1.11</version>
+            </plugin>
+
 
 
             <!--
