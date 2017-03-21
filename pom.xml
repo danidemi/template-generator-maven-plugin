@@ -5,12 +5,33 @@
 
     <groupId>com.danidemi</groupId>
     <artifactId>template-generator-maven-plugin</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.2</version>
     <packaging>maven-plugin</packaging>
 
     <name>template-generator-maven-plugin</name>
-
+    <description>Generates code and text content merging data from CSV files with a Velocity template.</description>
     <url>https://github.com/danidemi/template-generator-maven-plugin</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Daniele Demichelis</name>
+            <email>demichelis@danidemi.com</email>
+            <organization>Studio DaniDemi</organization>
+            <organizationUrl>http://www.danidemi.com</organizationUrl>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:https://github.com/danidemi/template-generator-maven-plugin</connection>
+        <developerConnection>scm:git:https://github.com/danidemi/template-generator-maven-plugin</developerConnection>
+        <url>https://github.com/danidemi/template-generator-maven-plugin</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -79,8 +100,35 @@
         </dependency>
     </dependencies>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <build>
         <plugins>
+
+
+            <!-- Controls Nexus Staging workflow. -->
+            <!-- Doc:    https://github.com/sonatype/nexus-maven-plugins/tree/master/staging/maven-plugin -->
+            <!-- Latest: https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.sonatype.plugins%22%20AND%20a%3A%22nexus-staging-maven-plugin%22 -->
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.8</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+
+
+
+
             <!--
             <plugin>
                 <groupId>${project.groupId}</groupId>
@@ -113,11 +161,9 @@
                 </executions>
             </plugin>
             -->
-            <!--
-            maven-plugin-plugin
-            * Needed if one want to use annotations.
-            * URL: https://maven.apache.org/plugin-tools/maven-plugin-plugin
-            -->
+
+            <!-- https://maven.apache.org/plugin-tools/maven-plugin-plugin -->
+            <!-- Extract Maven descriptor file from Mojo annotations. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
@@ -141,6 +187,65 @@
         </plugins>
     </build>
     <profiles>
+        <profile>
+            <id>release</id>
+
+            <build>
+                <plugins>
+
+                    <!-- https://maven.apache.org/plugins/maven-source-plugin/ -->
+                    <!-- Creates a jar archive of the source files of the current project. -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- https://maven.apache.org/plugins/maven-javadoc-plugin/ -->
+                    <!-- Uses javadoc to generate project documentation. -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.9.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- https://maven.apache.org/plugins/maven-gpg-plugin/ -->
+                    <!-- Signs all of the project's attached artifacts with GnuPG -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+            </build>
+
+        </profile>
         <!--
         <profile>
             <id>run-its</id>
