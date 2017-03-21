@@ -65,6 +65,7 @@ to use in a project, please enable this
     mvn versions:set
     mvn clean install
     mvn clean deploy -P release
+    mvn versions:set
 
 ### Snapshot versions
 
