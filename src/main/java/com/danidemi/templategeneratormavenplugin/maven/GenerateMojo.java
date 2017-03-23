@@ -57,51 +57,63 @@ public class GenerateMojo extends AbstractMojo {
     @Parameter( property = "generate.fileNameTemplate", required = true)
     private String fileNameTemplate;
 
+    @Parameter( property = "generate.includeRowExpression", required = false)
+    private String includeRowExpression;
+
     public void execute() throws MojoExecutionException, MojoFailureException {
 
         String pathToCsv = this.pathToCsv;
         String pathToTemplate = this.pathToTemplate;
         String pathToOutputFolder = this.pathToOutputFolder;
+        String outputFileName = this.fileNameTemplate;
+        String includeRowExpression = this.includeRowExpression;
+        ContextMode contextMode = this.contextMode;
 
-        log.info("Path to CSV: '" + pathToCsv + "'");
-        log.info("Path to Template: '" + pathToTemplate + "'");
-        log.info("Path to output: '" + pathToOutputFolder + "'");
-        log.info("CTX mode: '" + this.contextMode + "'");
-        log.info("FileName template: '" + fileNameTemplate + "'");
 
-        log.info("START");
+        log.info("Using CSV: '" + pathToCsv + "'");
+        log.info("Using template: '" + pathToTemplate + "'");
+        if(includeRowExpression!=null){
+            log.info("Include only rows satisfing: '" + includeRowExpression + "'");
+        }else{
+            log.info("Include all rows.");
+        }
+        log.info("Context mode: '" + contextMode + "'");
+        log.info("Output folder: '" + pathToOutputFolder + "'");
+        log.info("Output file: '" + outputFileName + "'");
+
 
         ContextCreator ctxs;
-        if (this.contextMode == ContextMode.ONE_CONTEXT_PER_CSV) {
+        if (contextMode == ContextMode.ONE_CONTEXT_PER_CSV) {
             ctxs = OneContextPerCsvFile.fromFilepath(pathToCsv);
-        } else if (this.contextMode == ContextMode.ONE_CONTEXT_PER_LINE) {
+        } else if (contextMode == ContextMode.ONE_CONTEXT_PER_LINE) {
             ctxs = OneContextPerCsvLine.fromFilepath(pathToCsv);
         } else{
             throw new IllegalStateException("Unsupported mode");
         }
-
         Template tfc = Template.fromFilePath(pathToTemplate);
         FileStore fs = new FileStore( new File(pathToOutputFolder) );
         Merger contentMerger = new Merger(tfc, ctxs, fs);
         EasyMerger fileNameMerger = new EasyMerger();
+        RowFilter rowFilter;
+        if(includeRowExpression!=null){
+            rowFilter = new JuelRowFilter(includeRowExpression);
+        }else{
+            rowFilter = new IncludeAllRowFilter();
+        }
 
         // get the contexts
         for (Map<String, Object> context : ctxs) {
 
+            if(rowFilter.discard(context)) continue;
+
             // build the content
             StringWriter content = contentMerger.mergeTemplateIntoStringWriter(tfc.asReader(), context);
-
-            log.info("content:\n" + content);
 
             // store the file
             String fileName = fileNameMerger.mergeTemplateIntoStringWriter(this.fileNameTemplate, context).toString();
             fs.storeContentToFile(content, fileName);
 
         }
-
-
-        log.info("END");
-
 
     }
 
