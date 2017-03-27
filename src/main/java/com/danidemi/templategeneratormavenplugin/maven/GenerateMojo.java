@@ -82,11 +82,18 @@ public class GenerateMojo extends AbstractMojo {
         log.info("Output file: '" + outputFileName + "'");
 
 
+        RowFilter rowFilter;
+        if(includeRowExpression!=null){
+            rowFilter = new JuelRowFilter(includeRowExpression);
+        }else{
+            rowFilter = new IncludeAllRowFilter();
+        }
+
         ContextCreator ctxs;
         if (contextMode == ContextMode.ONE_CONTEXT_PER_CSV) {
-            ctxs = OneContextPerCsvFile.fromFilepath(pathToCsv);
+            ctxs = OneContextPerCsvFile.fromFilepath(pathToCsv, rowFilter);
         } else if (contextMode == ContextMode.ONE_CONTEXT_PER_LINE) {
-            ctxs = OneContextPerCsvLine.fromFilepath(pathToCsv);
+            ctxs = OneContextPerCsvLine.fromFilepath(pathToCsv, rowFilter);
         } else{
             throw new IllegalStateException("Unsupported mode");
         }
@@ -94,12 +101,6 @@ public class GenerateMojo extends AbstractMojo {
         FileStore fs = new FileStore( new File(pathToOutputFolder) );
         Merger contentMerger = new Merger(tfc, ctxs, fs);
         EasyMerger fileNameMerger = new EasyMerger();
-        RowFilter rowFilter;
-        if(includeRowExpression!=null){
-            rowFilter = new JuelRowFilter(includeRowExpression);
-        }else{
-            rowFilter = new IncludeAllRowFilter();
-        }
 
         // get the contexts
         for (Map<String, Object> context : ctxs) {

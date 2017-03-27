@@ -1,5 +1,6 @@
 package com.danidemi.templategeneratormavenplugin.maven;
 
+import com.danidemi.templategeneratormavenplugin.generation.IncludeAllRowFilter;
 import org.apache.commons.collections.map.HashedMap;
 import org.junit.Test;
 

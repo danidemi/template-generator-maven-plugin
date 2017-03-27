@@ -1,4 +1,4 @@
-package com.danidemi.templategeneratormavenplugin.maven;
+package com.danidemi.templategeneratormavenplugin.generation;
 
 import com.danidemi.templategeneratormavenplugin.generation.RowFilter;
 import de.odysseus.el.ExpressionFactoryImpl;

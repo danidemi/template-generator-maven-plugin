@@ -1,4 +1,4 @@
-package com.danidemi.templategeneratormavenplugin.maven;
+package com.danidemi.templategeneratormavenplugin.generation;
 
 import java.util.Map;
 

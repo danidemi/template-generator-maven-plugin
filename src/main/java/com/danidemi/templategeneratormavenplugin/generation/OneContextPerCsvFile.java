@@ -55,7 +55,7 @@ public class OneContextPerCsvFile implements ContextCreator {
         return new OneContextPerCsvFile(file);
     }
 
-    public static OneContextPerCsvFile fromFilepath(String resourcePath) {
+    public static OneContextPerCsvFile fromFilepath(String resourcePath, RowFilter rowFilter) {
         File f = new File(resourcePath);
         checkArgument(f.exists(), "File '%s' does not exist.", resourcePath);
         checkArgument(f.canRead(), "File '%s' is not readable.", resourcePath);

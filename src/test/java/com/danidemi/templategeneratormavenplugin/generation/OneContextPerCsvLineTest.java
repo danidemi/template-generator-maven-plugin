@@ -32,12 +32,27 @@ import static org.junit.Assert.assertThat;
 public class OneContextPerCsvLineTest {
 
     @Test(expected = IllegalArgumentException.class) public void failWhenSourceDoesNotExist() {
-        OneContextPerCsvLine sut = OneContextPerCsvLine.fromClasspath("/does-not-exists");
+        OneContextPerCsvLine sut = OneContextPerCsvLine.fromClasspath("/does-not-exists", new IncludeAllRowFilter());
+    }
+
+    @Test public void produceContextFromFilteringInputRows() {
+
+        OneContextPerCsvLine sut = OneContextPerCsvLine.fromClasspath("/codeAndCurrency.csv", row -> !row.get("Code").equals("USD"));
+
+        Iterator<Map<String, Object>> ctxIt = sut.iterator();
+
+        Map<String, Object> ctx;
+        ctx = ctxIt.next();
+        assertThat( ctx.get("Code"), equalTo("USD") );
+        assertThat( ctx.get("Currency"), equalTo("Dollar") );
+
+        assertThat(ctxIt.hasNext(), is(false));
+
     }
 
     @Test public void produceContextFromAnotherCsvFile() {
 
-        OneContextPerCsvLine sut = OneContextPerCsvLine.fromClasspath("/codeAndCurrency.csv");
+        OneContextPerCsvLine sut = OneContextPerCsvLine.fromClasspath("/codeAndCurrency.csv", new IncludeAllRowFilter());
 
         Iterator<Map<String, Object>> ctxIt = sut.iterator();
 
@@ -60,7 +75,7 @@ public class OneContextPerCsvLineTest {
 
     @Test public void produceAContextForEachRowInCsvFile() {
 
-        OneContextPerCsvLine sut = OneContextPerCsvLine.fromClasspath("/codeAndCountry.csv");
+        OneContextPerCsvLine sut = OneContextPerCsvLine.fromClasspath("/codeAndCountry.csv", new IncludeAllRowFilter());
 
         Iterator<Map<String, Object>> ctxIt = sut.iterator();
 
