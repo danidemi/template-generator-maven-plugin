@@ -3,6 +3,8 @@ package com.danidemi.templategeneratormavenplugin.generation;
 /*-
  * #%L
  * template-generator-maven-plugin
+$Id:$
+$HeadURL:$
  * %%
  * Copyright (C) 2017 Studio DaniDemi
  * %%
@@ -20,5 +22,10 @@ limitations under the License.
  * #L%
  */
 
-public interface Templating {
+import java.util.Map;
+
+public class IncludeAllRowFilter implements com.danidemi.templategeneratormavenplugin.generation.RowFilter {
+    @Override public boolean keep(Map<String, Object> context) {
+        return true;
+    }
 }

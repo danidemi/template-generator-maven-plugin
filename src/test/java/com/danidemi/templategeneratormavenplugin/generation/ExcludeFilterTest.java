@@ -3,6 +3,8 @@ package com.danidemi.templategeneratormavenplugin.generation;
 /*-
  * #%L
  * template-generator-maven-plugin
+$Id:$
+$HeadURL:$
  * %%
  * Copyright (C) 2017 Studio DaniDemi
  * %%
@@ -20,5 +22,24 @@ limitations under the License.
  * #L%
  */
 
-public interface Templating {
+import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
+
+public class ExcludeFilterTest {
+
+    @Test
+    public void shouldDiscardSomethingKept() {
+        assertThat( new ExcludeFilter(context -> true).keep(new HashMap<>()), is(false) );
+    }
+
+    @Test
+    public void shouldKeepSomethingDiscarded() {
+        assertThat( new ExcludeFilter(context -> false).keep(new HashMap<>()), is(true) );
+    }
+
 }
