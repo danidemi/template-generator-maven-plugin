@@ -1,4 +1,4 @@
-package com.danidemi.templategeneratormavenplugin.demo;
+package com.danidemi.templategeneratormavenplugin.demo.velocity;
 
 /*-
  * #%L
@@ -26,19 +26,17 @@ import org.apache.velocity.app.Velocity;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.URL;
 
-public class VelocityPlainDemo {
+public class VelocityDemo {
 
-    public static void main(String[] args) {
-        new VelocityPlainDemo().run();
-    }
-
-    private void run() {
+    @Test
+    public void run() {
         Velocity.init();
         VelocityContext context = new VelocityContext();
         context.put("name", new String("Velocity"));

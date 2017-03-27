@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.apache.maven.plugin.my.unit</groupId>
+    <artifactId>project-to-test</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>Test MyMojo</name>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>template-generator-maven-plugin</artifactId>
+                <configuration>
+                    <pathToCsv>src/test/resources/codeAndCountry.csv</pathToCsv>
+                    <pathToTemplate>src/test/resources/unit/templates/CountryGreetings.txt.vm</pathToTemplate>
+                    <pathToOutputFolder>target/output/</pathToOutputFolder>
+                    <contextMode>ONE_CONTEXT_PER_LINE</contextMode>
+                    <fileNameTemplate>${Continent}/${Country}Greetings.txt</fileNameTemplate>
+                    <includeRowExpression>@{Continent.equals("Europe")}</includeRowExpression>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+

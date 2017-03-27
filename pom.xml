@@ -45,6 +45,7 @@
         <maven.compiler.target>${javaVersion}</maven.compiler.target>
         <mavenVersion>3.3.9</mavenVersion>
         <mavenPluginPluginVersion>3.3</mavenPluginPluginVersion>
+        <juel-api.version>2.2.7</juel-api.version>
     </properties>
 
     <dependencies>
@@ -85,6 +86,19 @@
             <scope>test</scope>
         </dependency>
         <!-- MAVEN -->
+
+        <!-- JUEL -->
+        <dependency>
+            <groupId>de.odysseus.juel</groupId>
+            <artifactId>juel-api</artifactId>
+            <version>${juel-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.odysseus.juel</groupId>
+            <artifactId>juel-impl</artifactId>
+            <version>${juel-api.version}</version>
+        </dependency>
+        <!-- JUEL -->
 
 
         <dependency>

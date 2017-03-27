@@ -32,12 +32,27 @@ import static org.junit.Assert.assertThat;
 public class OneContextPerCsvLineTest {
 
     @Test(expected = IllegalArgumentException.class) public void failWhenSourceDoesNotExist() {
-        OneContextPerCsvLine sut = OneContextPerCsvLine.fromClasspath("/does-not-exists");
+        OneContextPerCsvLine sut = OneContextPerCsvLine.fromClasspath("/does-not-exists", new IncludeAllRowFilter());
+    }
+
+    @Test public void produceContextFromFilteringInputRows() {
+
+        OneContextPerCsvLine sut = OneContextPerCsvLine.fromClasspath("/codeAndCurrency.csv", row -> row.get("Code").equals("USD"));
+
+        Iterator<Map<String, Object>> ctxIt = sut.iterator();
+
+        Map<String, Object> ctx;
+        ctx = ctxIt.next();
+        assertThat( ctx.get("Code"), equalTo("USD") );
+        assertThat( ctx.get("Currency"), equalTo("Dollar") );
+
+        assertThat(ctxIt.hasNext(), is(false));
+
     }
 
     @Test public void produceContextFromAnotherCsvFile() {
 
-        OneContextPerCsvLine sut = OneContextPerCsvLine.fromClasspath("/codeAndCurrency.csv");
+        OneContextPerCsvLine sut = OneContextPerCsvLine.fromClasspath("/codeAndCurrency.csv", new IncludeAllRowFilter());
 
         Iterator<Map<String, Object>> ctxIt = sut.iterator();
 
@@ -60,7 +75,7 @@ public class OneContextPerCsvLineTest {
 
     @Test public void produceAContextForEachRowInCsvFile() {
 
-        OneContextPerCsvLine sut = OneContextPerCsvLine.fromClasspath("/codeAndCountry.csv");
+        OneContextPerCsvLine sut = OneContextPerCsvLine.fromClasspath("/codeAndCountry.csv", new IncludeAllRowFilter());
 
         Iterator<Map<String, Object>> ctxIt = sut.iterator();
 
@@ -68,18 +83,47 @@ public class OneContextPerCsvLineTest {
         ctx = ctxIt.next();
         assertThat( ctx.get("Code"), equalTo("IT") );
         assertThat( ctx.get("Country"), equalTo("Italy") );
+        assertThat( ctx.get("Continent"), equalTo("Europe") );
 
         ctx = ctxIt.next();
         assertThat( ctx.get("Code"), equalTo("DE") );
         assertThat( ctx.get("Country"), equalTo("Germany") );
+        assertThat( ctx.get("Continent"), equalTo("Europe") );
 
         ctx = ctxIt.next();
         assertThat( ctx.get("Code"), equalTo("FR") );
         assertThat( ctx.get("Country"), equalTo("France") );
+        assertThat( ctx.get("Continent"), equalTo("Europe") );
 
         ctx = ctxIt.next();
         assertThat( ctx.get("Code"), equalTo("ES") );
         assertThat( ctx.get("Country"), equalTo("Spain") );
+        assertThat( ctx.get("Continent"), equalTo("Europe") );
+
+        ctx = ctxIt.next();
+        assertThat( ctx.get("Code"), equalTo("US") );
+        assertThat( ctx.get("Country"), equalTo("United States") );
+        assertThat( ctx.get("Continent"), equalTo("North America") );
+
+        ctx = ctxIt.next();
+        assertThat( ctx.get("Code"), equalTo("EG") );
+        assertThat( ctx.get("Country"), equalTo("Egypt") );
+        assertThat( ctx.get("Continent"), equalTo("Africa") );
+
+        ctx = ctxIt.next();
+        assertThat( ctx.get("Code"), equalTo("SA") );
+        assertThat( ctx.get("Country"), equalTo("South Africa") );
+        assertThat( ctx.get("Continent"), equalTo("Africa") );
+
+        ctx = ctxIt.next();
+        assertThat( ctx.get("Code"), equalTo("CH") );
+        assertThat( ctx.get("Country"), equalTo("China") );
+        assertThat( ctx.get("Continent"), equalTo("Asia") );
+
+        ctx = ctxIt.next();
+        assertThat( ctx.get("Code"), equalTo("RU") );
+        assertThat( ctx.get("Country"), equalTo("Russia") );
+        assertThat( ctx.get("Continent"), equalTo("Asia") );
 
         assertThat(ctxIt.hasNext(), is(false));
 
