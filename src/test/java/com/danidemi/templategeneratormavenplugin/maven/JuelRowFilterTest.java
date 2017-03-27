@@ -17,7 +17,7 @@ public class JuelRowFilterTest {
 
         boolean discard = sut.keep(context);
 
-        assertThat( discard, is(true) );
+        assertThat( discard, is(false) );
 
     }
 
@@ -29,7 +29,7 @@ public class JuelRowFilterTest {
 
         boolean discard = sut.keep(context);
 
-        assertThat( discard, is(false) );
+        assertThat( discard, is(true) );
 
     }
 

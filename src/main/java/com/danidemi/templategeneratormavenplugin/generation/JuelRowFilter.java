@@ -1,6 +1,5 @@
 package com.danidemi.templategeneratormavenplugin.generation;
 
-import com.danidemi.templategeneratormavenplugin.generation.RowFilter;
 import de.odysseus.el.ExpressionFactoryImpl;
 import de.odysseus.el.util.SimpleContext;
 
@@ -21,11 +20,15 @@ public class JuelRowFilter implements RowFilter {
         SimpleContext context = new SimpleContext();
 
         contextt.entrySet().forEach( (e)->{
-            context.setVariable(e.getKey(), factory.createValueExpression(e.getValue(), e.getValue().getClass()));
+            String key = e.getKey();
+            Object value = e.getValue();
+            context.setVariable(key, factory.createValueExpression(value, value.getClass()));
         } );
 
         ValueExpression e = factory.createValueExpression(context, includeRowExpression, Boolean.class);
-        return !(Boolean) e.getValue(context);
+        boolean result = (Boolean) e.getValue(context);
+
+        return result;
 
     }
 }

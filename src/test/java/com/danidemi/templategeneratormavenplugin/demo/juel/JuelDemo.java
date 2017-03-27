@@ -14,6 +14,38 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class JuelDemo {
 
     @Test
+    public void shouldEvaluateComplexExpressions() {
+
+        ExpressionFactory factory = new ExpressionFactoryImpl();
+
+        String[] args = new String[]{
+                "a",
+                "bb",
+                "ccc",
+                "dddd"
+        };
+
+        {
+            String expression = "${args[3].length() > 2 && args[2].length() > 1}";
+            SimpleContext context = new SimpleContext();
+            context.setVariable("args", factory.createValueExpression(args, String[].class));
+            ValueExpression e = factory.createValueExpression(context, expression, Boolean.class);
+            Object value = e.getValue(context);
+            assertThat("arg is '" + args + "'", ((Boolean) value).booleanValue(), is(true));
+        }
+
+        {
+            String expression = "${args[3].length() > 200 && args[2].length() > 100}";
+            SimpleContext context = new SimpleContext();
+            context.setVariable("args", factory.createValueExpression(args, String[].class));
+            ValueExpression e = factory.createValueExpression(context, expression, Boolean.class);
+            Object value = e.getValue(context);
+            assertThat("arg is '" + args + "'", ((Boolean) value).booleanValue(), is(false));
+        }
+
+    }
+
+    @Test
     public void shouldEvaluateAnExpressionRepeatedly() throws NoSuchMethodException {
 
         ExpressionFactory factory = new ExpressionFactoryImpl();

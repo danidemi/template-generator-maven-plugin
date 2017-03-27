@@ -59,8 +59,8 @@ public class OneContextPerCsvLine implements ContextCreator {
 
     public static OneContextPerCsvLine fromFilepath(String resourcePath, RowFilter rowFilter) {
         File f = new File(resourcePath);
-        checkArgument(f.exists(), "File '%s' does not exist.", resourcePath);
-        checkArgument(f.canRead(), "File '%s' is not readable.", resourcePath);
+        checkArgument(f.exists(), "File '%s' (resolved to '%s') does not exist.", resourcePath, f.getAbsolutePath());
+        checkArgument(f.canRead(), "File '%s' (resolved to '%s') is not readable.", resourcePath, f.getAbsolutePath());
         return new OneContextPerCsvLine(f.getAbsolutePath(), rowFilter);
     }
 
