@@ -17,7 +17,7 @@ public class JuelRowFilter implements RowFilter {
         this.includeRowExpression = includeRowExpression;
     }
 
-    @Override public boolean discard(Map<String, Object> contextt) {
+    @Override public boolean keep(Map<String, Object> contextt) {
         SimpleContext context = new SimpleContext();
 
         contextt.entrySet().forEach( (e)->{

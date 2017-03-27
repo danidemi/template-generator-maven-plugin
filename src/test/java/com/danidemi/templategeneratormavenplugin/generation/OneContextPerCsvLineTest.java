@@ -37,7 +37,7 @@ public class OneContextPerCsvLineTest {
 
     @Test public void produceContextFromFilteringInputRows() {
 
-        OneContextPerCsvLine sut = OneContextPerCsvLine.fromClasspath("/codeAndCurrency.csv", row -> !row.get("Code").equals("USD"));
+        OneContextPerCsvLine sut = OneContextPerCsvLine.fromClasspath("/codeAndCurrency.csv", row -> row.get("Code").equals("USD"));
 
         Iterator<Map<String, Object>> ctxIt = sut.iterator();
 

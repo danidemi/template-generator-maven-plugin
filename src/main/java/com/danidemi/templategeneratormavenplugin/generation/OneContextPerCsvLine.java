@@ -90,9 +90,8 @@ public class OneContextPerCsvLine implements ContextCreator {
             FilterIteratorAdapter<Map<String, Object>> iterator2 = new FilterIteratorAdapter<>(iterator1, new Predicate<Map<String, Object>>() {
                 @Override
                 public boolean test(Map<String, Object> stringObjectMap) {
-                    boolean discard = rowFilter.discard(stringObjectMap);
-                    boolean include = !discard;
-                    return include;
+                    boolean keep = rowFilter.keep(stringObjectMap);
+                    return keep;
                 }
             });
 

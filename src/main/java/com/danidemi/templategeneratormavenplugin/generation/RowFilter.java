@@ -4,6 +4,6 @@ import java.util.Map;
 
 public interface RowFilter {
 
-    boolean discard(Map<String, Object> context);
+    boolean keep(Map<String, Object> context);
 
 }

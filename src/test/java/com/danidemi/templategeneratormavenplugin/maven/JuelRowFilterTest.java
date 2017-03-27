@@ -15,7 +15,7 @@ public class JuelRowFilterTest {
 
         HashedMap context = newContextWithA(3);
 
-        boolean discard = sut.discard(context);
+        boolean discard = sut.keep(context);
 
         assertThat( discard, is(true) );
 
@@ -27,7 +27,7 @@ public class JuelRowFilterTest {
 
         HashedMap context = newContextWithA(5);
 
-        boolean discard = sut.discard(context);
+        boolean discard = sut.keep(context);
 
         assertThat( discard, is(false) );
 

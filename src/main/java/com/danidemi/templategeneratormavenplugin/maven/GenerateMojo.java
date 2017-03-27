@@ -105,7 +105,7 @@ public class GenerateMojo extends AbstractMojo {
         // get the contexts
         for (Map<String, Object> context : ctxs) {
 
-            if(rowFilter.discard(context)) continue;
+            if(rowFilter.keep(context)) continue;
 
             // build the content
             StringWriter content = contentMerger.mergeTemplateIntoStringWriter(tfc.asReader(), context);

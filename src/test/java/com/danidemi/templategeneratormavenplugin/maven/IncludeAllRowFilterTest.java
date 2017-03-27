@@ -13,8 +13,8 @@ public class IncludeAllRowFilterTest {
 
         IncludeAllRowFilter sut = new IncludeAllRowFilter();
 
-        assertThat( sut.discard(null), is(false) );
-        assertThat( sut.discard(new HashedMap()), is(false) );
+        assertThat( sut.keep(null), is(true) );
+        assertThat( sut.keep(new HashedMap()), is(true) );
 
     }
 
