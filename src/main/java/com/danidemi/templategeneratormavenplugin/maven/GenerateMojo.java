@@ -66,14 +66,14 @@ public class GenerateMojo extends AbstractMojo {
         String pathToTemplate = this.pathToTemplate;
         String pathToOutputFolder = this.pathToOutputFolder;
         String outputFileName = this.fileNameTemplate;
-        String includeRowExpression = this.includeRowExpression;
+        String includeRowExpression2 = this.includeRowExpression != null ? this.includeRowExpression.replace("@{", "${") : null;
         ContextMode contextMode = this.contextMode;
 
 
         log.info("Using CSV: '" + pathToCsv + "'");
         log.info("Using template: '" + pathToTemplate + "'");
-        if(includeRowExpression!=null){
-            log.info("Include only rows satisfing: '" + includeRowExpression + "'");
+        if(includeRowExpression2!=null){
+            log.info("Include only rows satisfing 2: '" + includeRowExpression2 + "'");
         }else{
             log.info("Include all rows.");
         }
@@ -83,8 +83,8 @@ public class GenerateMojo extends AbstractMojo {
 
 
         RowFilter rowFilter;
-        if(includeRowExpression!=null){
-            rowFilter = new JuelRowFilter(includeRowExpression);
+        if(includeRowExpression2!=null){
+            rowFilter = new JuelRowFilter( includeRowExpression2 );
         }else{
             rowFilter = new IncludeAllRowFilter();
         }
@@ -103,9 +103,10 @@ public class GenerateMojo extends AbstractMojo {
         EasyMerger fileNameMerger = new EasyMerger();
 
         // get the contexts
+        int i = 0;
         for (Map<String, Object> context : ctxs) {
 
-            if(rowFilter.keep(context)) continue;
+            log.info("Context " + i + ": " + context);
 
             // build the content
             StringWriter content = contentMerger.mergeTemplateIntoStringWriter(tfc.asReader(), context);
