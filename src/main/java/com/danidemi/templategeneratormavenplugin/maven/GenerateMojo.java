@@ -37,7 +37,8 @@ public class GenerateMojo extends AbstractMojo {
 
     public enum ContextMode {
         ONE_CONTEXT_PER_LINE,
-        ONE_CONTEXT_PER_CSV
+        ONE_CONTEXT_PER_CSV,
+        ONE_CONTEXT_PER_TAG
     }
 
     private Log log = getLog();
@@ -94,6 +95,8 @@ public class GenerateMojo extends AbstractMojo {
             ctxs = OneContextPerCsvFile.fromFilepath(pathToCsv, rowFilter);
         } else if (contextMode == ContextMode.ONE_CONTEXT_PER_LINE) {
             ctxs = OneContextPerCsvLine.fromFilepath(pathToCsv, rowFilter);
+        } else if(contextMode == ContextMode.ONE_CONTEXT_PER_TAG) {
+            ctxs = new OneContextPerTag(pathToCsv, rowFilter);
         } else{
             throw new IllegalStateException("Unsupported mode");
         }
