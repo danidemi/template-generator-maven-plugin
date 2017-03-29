@@ -7,7 +7,7 @@ import javax.el.ExpressionFactory;
 import javax.el.ValueExpression;
 import java.util.Map;
 
-class JuelEval<T> {
+public class JuelEval<T> {
 
     private final ExpressionFactory factory = new ExpressionFactoryImpl();
 
