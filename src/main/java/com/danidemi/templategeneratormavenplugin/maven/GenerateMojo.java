@@ -30,6 +30,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.Map;
 
 @Mojo(name = "generate")
@@ -37,7 +38,8 @@ public class GenerateMojo extends AbstractMojo {
 
     public enum ContextMode {
         ONE_CONTEXT_PER_LINE,
-        ONE_CONTEXT_PER_CSV
+        ONE_CONTEXT_PER_CSV,
+        ONE_CONTEXT_PER_TAG
     }
 
     private Log log = getLog();
@@ -60,6 +62,12 @@ public class GenerateMojo extends AbstractMojo {
     @Parameter( property = "generate.includeRowExpression", required = false)
     private String includeRowExpression;
 
+    @Parameter( property = "generate.includeContextExpression", required = false)
+    private String includeContextExpression;
+
+    @Parameter( property = "generate.tagExpressions", required = false)
+    private String[] tagExpressions;
+
     public void execute() throws MojoExecutionException, MojoFailureException {
 
         String pathToCsv = this.pathToCsv;
@@ -67,6 +75,7 @@ public class GenerateMojo extends AbstractMojo {
         String pathToOutputFolder = this.pathToOutputFolder;
         String outputFileName = this.fileNameTemplate;
         String includeRowExpression2 = this.includeRowExpression != null ? this.includeRowExpression.replace("@{", "${") : null;
+        String includeContextExpression = this.includeContextExpression != null ? this.includeContextExpression.replace("@{", "${") : null;
         ContextMode contextMode = this.contextMode;
 
 
@@ -80,6 +89,11 @@ public class GenerateMojo extends AbstractMojo {
         log.info("Context mode: '" + contextMode + "'");
         log.info("Output folder: '" + pathToOutputFolder + "'");
         log.info("Output file: '" + outputFileName + "'");
+        if(includeContextExpression!=null){
+            log.info("Include only contexts satisfying: '" + includeContextExpression + "'");
+        }else{
+            log.info("Include all contexts.");
+        }
 
 
         RowFilter rowFilter;
@@ -94,6 +108,13 @@ public class GenerateMojo extends AbstractMojo {
             ctxs = OneContextPerCsvFile.fromFilepath(pathToCsv, rowFilter);
         } else if (contextMode == ContextMode.ONE_CONTEXT_PER_LINE) {
             ctxs = OneContextPerCsvLine.fromFilepath(pathToCsv, rowFilter);
+        } else if(contextMode == ContextMode.ONE_CONTEXT_PER_TAG) {
+            OneContextPerTag ocpt = new OneContextPerTag(pathToCsv, rowFilter);
+            if(this.tagExpressions == null || this.tagExpressions.length == 0){
+                throw new MojoExecutionException("A list of tagExpressions are required when using " + ContextMode.ONE_CONTEXT_PER_TAG);
+            }
+            Arrays.stream(tagExpressions).forEach( te -> ocpt.addTagExpression(te) );
+            ctxs = ocpt;
         } else{
             throw new IllegalStateException("Unsupported mode");
         }
@@ -103,8 +124,20 @@ public class GenerateMojo extends AbstractMojo {
         EasyMerger fileNameMerger = new EasyMerger();
 
         // get the contexts
+        JuelEval<Boolean> keepContextEval = includeContextExpression!=null ? new JuelEval<>() : null;
         int i = 0;
+        boolean contextKept;
         for (Map<String, Object> context : ctxs) {
+
+            contextKept = true;
+            if(keepContextEval!=null){
+                contextKept = keepContextEval.invoke(context, includeContextExpression);
+            }
+
+            if(!contextKept){
+                log.info("Context discarded.");
+                continue;
+            }
 
             log.info("Context " + i + ": " + context);
 

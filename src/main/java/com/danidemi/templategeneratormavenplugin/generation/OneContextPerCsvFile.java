@@ -38,7 +38,49 @@ import static com.danidemi.templategeneratormavenplugin.utils.Preconditions.vali
 
 /**
  * Creates one context for each line in a CSV.
+ *
+ * <p>
+ *     For instance, for such a CSV file...
+ * <table>
+ *     <tr>
+ *         <th>Code</th>
+ *         <th>Country</th>
+ *     </tr>
+ *     <tr>
+ *         <td>IT</td>
+ *         <td>Italy</td>
+ *     </tr>
+ *     <tr>
+ *         <td>FR</td>
+ *         <td>France</td>
+ *     </tr>
+ * </table>
+ * </p>
+ * ...it produces just one context with the following structure.
+<pre>
+{
+    File: [
+            {
+                Code: IT,
+                Country: Italy,
+                RowIndex: 0,
+                RowCount: 1
+            },
+            {
+                Code: FR,
+                Country: France,
+                RowIndex: 1,
+                RowCount: 2
+            }
+    ],
+    TotalRows:2,
+    LastIndex:1
+}
+</pre>
  */
+
+
+
 public class OneContextPerCsvFile implements ContextCreator {
 
     private final String filePath;
