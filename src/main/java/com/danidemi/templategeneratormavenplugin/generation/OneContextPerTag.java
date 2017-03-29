@@ -59,14 +59,19 @@ public class OneContextPerTag implements ContextCreator {
             while(iterator2.hasNext()){
                 Map<String, Object> row = iterator2.next();
 
-                Set<String> tags = new HashSet<>();
+                Set<String> tagsForRow = new HashSet<>();
 
                 for (String tagExpression : tagExpressions) {
-                    tags.add( new JuelEval<String>().invoke( row, tagExpression ) );
+                    tagExpression = tagExpression.replace("@{", "${");
+                    String tag = new JuelEval<String>().invoke(row, tagExpression);
+                    tagsForRow.add(tag);
                 }
 
-                for (String tag : tags) {
-                    tag2context.get(tag).add(row);
+                for (String tagForRow : tagsForRow) {
+                    if(!tag2context.containsKey(tagForRow)){
+                        tag2context.put(tagForRow, new ArrayList<>());
+                    }
+                    tag2context.get(tagForRow).add(row);
                 }
 
             }
