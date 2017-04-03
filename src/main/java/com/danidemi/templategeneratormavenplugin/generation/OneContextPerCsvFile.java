@@ -7,16 +7,16 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * Copyright (C) 2017 Studio DaniDemi
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-     http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  * #L%
  */
 
@@ -41,7 +41,8 @@ import static com.danidemi.templategeneratormavenplugin.utils.Preconditions.vali
  *
  * <p>
  *     For instance, for such a CSV file...
- * <table>
+ * </p>
+ * <table summary="CSV example.">
  *     <tr>
  *         <th>Code</th>
  *         <th>Country</th>
@@ -55,7 +56,6 @@ import static com.danidemi.templategeneratormavenplugin.utils.Preconditions.vali
  *         <td>France</td>
  *     </tr>
  * </table>
- * </p>
  * ...it produces just one context with the following structure.
 <pre>
 {
