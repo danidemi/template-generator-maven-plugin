@@ -22,8 +22,8 @@ package com.danidemi.templategeneratormavenplugin.generation;
 
 import java.util.Map;
 
-/**
- * Implementations are able to provide a sequence of contexts.
- */
-public interface ContextCreator extends Iterable<Map<String,Object>> {
+public class IncludeAllRowFilter implements com.danidemi.templategeneratormavenplugin.generation.RowFilter {
+    @Override public boolean keep(Map<String, Object> context) {
+        return true;
+    }
 }

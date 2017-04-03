@@ -1,5 +1,25 @@
 package com.danidemi.templategeneratormavenplugin.generation;
 
+/*-
+ * #%L
+ * template-generator-maven-plugin
+ * %%
+ * Copyright (C) 2017 Studio DaniDemi
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -18,7 +38,49 @@ import static com.danidemi.templategeneratormavenplugin.utils.Preconditions.vali
 
 /**
  * Creates one context for each line in a CSV.
+ *
+ * <p>
+ *     For instance, for such a CSV file...
+ * </p>
+ * <table summary="CSV example.">
+ *     <tr>
+ *         <th>Code</th>
+ *         <th>Country</th>
+ *     </tr>
+ *     <tr>
+ *         <td>IT</td>
+ *         <td>Italy</td>
+ *     </tr>
+ *     <tr>
+ *         <td>FR</td>
+ *         <td>France</td>
+ *     </tr>
+ * </table>
+ * ...it produces just one context with the following structure.
+<pre>
+{
+    File: [
+            {
+                Code: IT,
+                Country: Italy,
+                RowIndex: 0,
+                RowCount: 1
+            },
+            {
+                Code: FR,
+                Country: France,
+                RowIndex: 1,
+                RowCount: 2
+            }
+    ],
+    TotalRows:2,
+    LastIndex:1
+}
+</pre>
  */
+
+
+
 public class OneContextPerCsvFile implements ContextCreator {
 
     private final String filePath;
@@ -35,7 +97,7 @@ public class OneContextPerCsvFile implements ContextCreator {
         return new OneContextPerCsvFile(file);
     }
 
-    public static OneContextPerCsvFile fromFilepath(String resourcePath) {
+    public static OneContextPerCsvFile fromFilepath(String resourcePath, RowFilter rowFilter) {
         File f = new File(resourcePath);
         checkArgument(f.exists(), "File '%s' does not exist.", resourcePath);
         checkArgument(f.canRead(), "File '%s' is not readable.", resourcePath);

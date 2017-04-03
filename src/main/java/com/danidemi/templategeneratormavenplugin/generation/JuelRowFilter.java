@@ -22,8 +22,23 @@ package com.danidemi.templategeneratormavenplugin.generation;
 
 import java.util.Map;
 
-/**
- * Implementations are able to provide a sequence of contexts.
- */
-public interface ContextCreator extends Iterable<Map<String,Object>> {
+public class JuelRowFilter implements RowFilter {
+
+    private final String includeRowExpression;
+
+    public JuelRowFilter(String includeRowExpression) {
+        this.includeRowExpression = includeRowExpression;
+    }
+
+    @Override public boolean keep(Map<String, Object> contextt) {
+
+        String includeRowExpression = this.includeRowExpression;
+        Class<Boolean> aClass = Boolean.class;
+
+        Boolean result = new JuelEval<Boolean>().invoke(contextt, includeRowExpression);
+
+        return result;
+
+    }
+
 }

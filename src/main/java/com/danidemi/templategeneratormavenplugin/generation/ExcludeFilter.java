@@ -22,8 +22,16 @@ package com.danidemi.templategeneratormavenplugin.generation;
 
 import java.util.Map;
 
-/**
- * Implementations are able to provide a sequence of contexts.
- */
-public interface ContextCreator extends Iterable<Map<String,Object>> {
+public class ExcludeFilter implements RowFilter {
+
+    private final RowFilter rowFilter;
+
+    public ExcludeFilter(RowFilter rowFilter) {
+        this.rowFilter = rowFilter;
+    }
+
+    @Override
+    public boolean keep(Map<String, Object> context) {
+        return !rowFilter.keep(context);
+    }
 }
