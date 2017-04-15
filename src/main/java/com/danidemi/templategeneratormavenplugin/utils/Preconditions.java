@@ -38,4 +38,8 @@ public class Preconditions {
         checkArgument(argument != null, "Null argument");
         return argument;
     }
+
+    public static void checkArgument(boolean trueCondition) {
+        checkArgument(trueCondition, "Illegal argument.");
+    }
 }
