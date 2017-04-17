@@ -1,55 +1,48 @@
 package com.danidemi.templategeneratormavenplugin.model;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 
+/**
+ * To create a {@link ContextModel context} please use {@link ContextModelBuilder}.
+ */
 public class ContextModel {
 
-    private final List<RowModel> rows = new ArrayList<>();
+    private Iterable<RowModel> rows;
     private File template;
     private File source;
     private File target;
     private ContextMetaModel meta = null;
 
-    public void addRow(Map<String, Object> row, int sourceRecord) {
-
-        int rowsAlreadyThere = rows.size();
-
-        RowModel rowModel = new RowModel(
-                row,
-                new RowMetaModel(++rowsAlreadyThere, sourceRecord)
-        );
-
-        this.rows.add(rowModel);
+    void setTemplate(File template) {
+        this.template = template;
     }
 
-    public List<RowModel> getRows() {
+    void setSource(File source) {
+        this.source = source;
+    }
+
+    void setTarget(File target) {
+        this.target = target;
+    }
+
+    void setMetaModel(ContextMetaModel metaModel) {
+        this.meta = metaModel;
+    }
+
+    void setRows(Iterable<RowModel> rows) {
+        this.rows = rows;
+    }
+
+    ContextMetaModel getMeta() {
+        return meta;
+    }
+
+    public Iterable<RowModel> rowIterator() {
         return rows;
     }
 
-    public ContextModel withTemplate(File template) {
-        this.template = template;
-        return this;
-    }
-
-    public ContextModel withSource(File source) {
-        this.source = source;
-        return this;
-    }
-
-    public ContextModel withTarget(File target) {
-        this.target = target;
-        return this;
-    }
-
-    public ContextMetaModel getMeta() {
-        if(meta==null){
-            LinkedHashSet<String> tags = new LinkedHashSet<>(0);
-            meta = new ContextMetaModel( new FileModel( template ), new FileModel( source ), new FileModel( target ), new CountModel(rows.size()), tags);
-        }
-        return meta;
+    public Map<String, Object> asMap() {
+        throw new UnsupportedOperationException();
     }
 }

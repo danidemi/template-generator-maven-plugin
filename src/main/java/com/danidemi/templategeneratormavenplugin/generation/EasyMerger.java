@@ -20,6 +20,7 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
+import com.danidemi.templategeneratormavenplugin.model.RowModel;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 
@@ -34,10 +35,10 @@ public class EasyMerger {
 
     }
 
-    public StringWriter mergeTemplateIntoStringWriter(Reader inputStreamReader, Map<String, Object> context) {
+    public StringWriter mergeTemplateIntoStringWriter(Reader inputStreamReader, RowModel context) {
         StringWriter sw = new StringWriter();
         final VelocityContext vcontext = new VelocityContext();
-        context.forEach( (k,v) -> vcontext.put(k,v)  );
+        context.asMap().forEach( (k,v) -> vcontext.put(k,v)  );
         Velocity.evaluate(vcontext, sw, "logtag", inputStreamReader);
         return sw;
     }

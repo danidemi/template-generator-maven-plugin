@@ -9,23 +9,27 @@ public class ContextMetaModel {
     private final FileModel template;
     private final FileModel source;
     private final FileModel target;
-    private final CountModel count;
-    private final LinkedHashSet<String> tags;
+    private CountModel count;
+    private LinkedHashSet<String> tags;
 
-    public ContextMetaModel(FileModel template, FileModel source, FileModel target, CountModel count, LinkedHashSet<String> tags) {
+    ContextMetaModel(FileModel template, FileModel source, FileModel target) {
 
         checkArgument(template!=null );
         checkArgument(source!=null );
         checkArgument(target!=null );
-        checkArgument(count!=null );
-        checkArgument(tags!=null );
 
         this.template = template;
         this.source = source;
         this.target = target;
-        this.count = count;
-        this.tags = tags;
 
+    }
+
+    void setCount(CountModel count) {
+        this.count = count;
+    }
+
+    void setTags(LinkedHashSet<String> tags) {
+        this.tags = tags;
     }
 
     public FileModel getTemplate() {

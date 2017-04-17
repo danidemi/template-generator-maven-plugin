@@ -20,10 +20,12 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
-import java.util.Map;
+import com.danidemi.templategeneratormavenplugin.model.ContextModel;
+import com.danidemi.templategeneratormavenplugin.model.RowModel;
 
 public interface RowFilter {
 
-    boolean keep(Map<String, Object> context);
+    boolean keep(RowModel context);
 
+    boolean keep(ContextModel contextModel);
 }

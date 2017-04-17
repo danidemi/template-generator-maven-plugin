@@ -3,7 +3,7 @@ package com.danidemi.templategeneratormavenplugin.model;
 public class CountModel {
     private final int rowCount;
 
-    public CountModel(int rowCount) {
+    CountModel(int rowCount) {
         this.rowCount = rowCount;
     }
 

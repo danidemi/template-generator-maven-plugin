@@ -20,6 +20,8 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
+import com.danidemi.templategeneratormavenplugin.model.ContextModel;
+import com.danidemi.templategeneratormavenplugin.model.ContextModelBuilder;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -30,57 +32,14 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static com.danidemi.templategeneratormavenplugin.utils.Preconditions.checkArgument;
 import static com.danidemi.templategeneratormavenplugin.utils.Preconditions.validateArgumentNotNull;
 
 /**
- * Creates one context for each line in a CSV.
- *
- * <p>
- *     For instance, for such a CSV file...
- * </p>
- * <table summary="CSV example.">
- *     <tr>
- *         <th>Code</th>
- *         <th>Country</th>
- *     </tr>
- *     <tr>
- *         <td>IT</td>
- *         <td>Italy</td>
- *     </tr>
- *     <tr>
- *         <td>FR</td>
- *         <td>France</td>
- *     </tr>
- * </table>
- * ...it produces just one context with the following structure.
-<pre>
-{
-    File: [
-            {
-                Code: IT,
-                Country: Italy,
-                RowIndex: 0,
-                RowCount: 1
-            },
-            {
-                Code: FR,
-                Country: France,
-                RowIndex: 1,
-                RowCount: 2
-            }
-    ],
-    TotalRows:2,
-    LastIndex:1
-}
-</pre>
+ * Creates one context for the whole file.
  */
-
-
-
 public class OneContextPerCsvFile implements ContextCreator {
 
     private final String filePath;
@@ -104,9 +63,10 @@ public class OneContextPerCsvFile implements ContextCreator {
         return new OneContextPerCsvFile(f.getAbsolutePath());
     }
 
-    @Override public Iterator<Map<String, Object>> iterator() {
-        try {
+    @Override public Iterable<ContextModel> contexts() {
+        ContextModelBuilder builder = new ContextModelBuilder();
 
+        try {
             // get the reader from the resource
             Reader in = new FileReader(filePath);
             CSVParser parser = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(in);
@@ -114,45 +74,24 @@ public class OneContextPerCsvFile implements ContextCreator {
             // get the headers
             List<String> headersAsList = new ArrayList<>( parser.getHeaderMap().keySet() );
 
-
-            ArrayList<Map<String, Object>> ctx = new ArrayList<>();
-
-            int index = 0;
             for(CSVRecord record : parser){
                 HashMap mapped = new HashMap<Object, String>();
                 headersAsList.forEach( header -> mapped.put(header, record.get(header)) );
-
-                mapped.put("RowIndex", index);
-                mapped.put("RowCount", index+1);
-
-                ctx.add( mapped );
-                index++;
+                builder.toRows().add( mapped, record.getRecordNumber() );
             }
 
-            HashMap<String, Object> r = new HashMap<>();
-            r.put("File", ctx);
-            r.put("TotalRows", index);
-            r.put("LastIndex", index-1);
-
-            List<Map<String, Object>> rr = new ArrayList<>();
-            rr.add(r);
-
-            return rr.iterator();
+            return Arrays.asList( builder.build() );
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-
-    @Override public void forEach(Consumer<? super Map<String, Object>> action) {
-        throw new UnsupportedOperationException("Not yet implemented.");
-    }
-
-    @Override public Spliterator<Map<String, Object>> spliterator() {
-        throw new UnsupportedOperationException("Not yet implemented.");
-    }
-
+    /**
+     * Create a new iterator based on a given one, where elements are obtained applying a transformation to the original ones.
+     * @param <Original>    The type of the items from the original iterator.
+     * @param <Tranformed>  The type of the items in the transformed iterator.
+     */
     private static class IteratorAdapter<Original, Tranformed> implements Iterator<Tranformed> {
 
         private final Iterator<Original> iterator;

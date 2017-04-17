@@ -22,6 +22,8 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
+import com.danidemi.templategeneratormavenplugin.model.ContextModel;
+import com.danidemi.templategeneratormavenplugin.model.RowModel;
 import de.odysseus.el.ExpressionFactoryImpl;
 import de.odysseus.el.util.SimpleContext;
 
@@ -33,16 +35,26 @@ public class JuelEval<T> {
 
     private final ExpressionFactory factory = new ExpressionFactoryImpl();
 
-    public T invoke(Map<String, Object> contextt, String includeRowExpression) {
-        SimpleContext context = new SimpleContext();
+    public T invoke(ContextModel context, String includeRowExpression) {
+        Map<String, Object> rowAsMap = context.asMap();
+        Object result = eval(includeRowExpression, rowAsMap);
+        return (T) result;
+    }
 
-        contextt.entrySet().forEach( (e)->{
+    public T invoke(RowModel row, String includeRowExpression) {
+        Map<String, Object> rowAsMap = row.asMap();
+        Object result = eval(includeRowExpression, rowAsMap);
+        return (T) result;
+    }
+
+    private Object eval(String expression, Map<String, Object> map) {
+        SimpleContext juelContext = new SimpleContext();
+        map.entrySet().forEach( (e)->{
             String key = e.getKey();
             Object value = e.getValue();
-            context.setVariable(key, factory.createValueExpression(value, value.getClass()));
+            juelContext.setVariable(key, factory.createValueExpression(value, value.getClass()));
         } );
-
-        ValueExpression e = factory.createValueExpression(context, includeRowExpression, Object.class);
-        return (T) e.getValue(context);
+        ValueExpression e = factory.createValueExpression(juelContext, expression, Object.class);
+        return e.getValue(juelContext);
     }
 }

@@ -20,7 +20,8 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
-import java.util.Map;
+import com.danidemi.templategeneratormavenplugin.model.ContextModel;
+import com.danidemi.templategeneratormavenplugin.model.RowModel;
 
 public class JuelRowFilter implements RowFilter {
 
@@ -30,15 +31,18 @@ public class JuelRowFilter implements RowFilter {
         this.includeRowExpression = includeRowExpression;
     }
 
-    @Override public boolean keep(Map<String, Object> contextt) {
-
+    @Override public boolean keep(RowModel row) {
         String includeRowExpression = this.includeRowExpression;
         Class<Boolean> aClass = Boolean.class;
-
-        Boolean result = new JuelEval<Boolean>().invoke(contextt, includeRowExpression);
-
+        Boolean result = new JuelEval<Boolean>().invoke(row, includeRowExpression);
         return result;
+    }
 
+    @Override public boolean keep(ContextModel contextModel) {
+        String includeRowExpression = this.includeRowExpression;
+        Class<Boolean> aClass = Boolean.class;
+        Boolean result = new JuelEval<Boolean>().invoke(contextModel, includeRowExpression);
+        return result;
     }
 
 }

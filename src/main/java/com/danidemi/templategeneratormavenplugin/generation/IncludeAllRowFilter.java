@@ -20,10 +20,10 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
-import java.util.Map;
+import com.danidemi.templategeneratormavenplugin.model.RowModel;
 
 public class IncludeAllRowFilter implements com.danidemi.templategeneratormavenplugin.generation.RowFilter {
-    @Override public boolean keep(Map<String, Object> context) {
+    @Override public boolean keep(RowModel context) {
         return true;
     }
 }

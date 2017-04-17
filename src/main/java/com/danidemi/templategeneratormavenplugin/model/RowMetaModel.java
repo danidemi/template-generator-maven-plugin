@@ -1,27 +1,27 @@
 package com.danidemi.templategeneratormavenplugin.model;
 
 public class RowMetaModel {
-    private final int count;
-    private final int sourceCount;
+    private final long count;
+    private final long sourceCount;
 
-    public RowMetaModel(int count, int sourceCount) {
+    RowMetaModel(int count, long sourceCount) {
         this.count = count;
         this.sourceCount = sourceCount;
     }
 
-    public int getCount() {
+    public long getCount() {
         return count;
     }
 
-    public int getIndex() {
+    public long getIndex() {
         return count-1;
     }
 
-    public int getSourceIndex() {
+    public long getSourceIndex() {
         return sourceCount-1;
     }
 
-    public int getSourceCount() {
+    public long getSourceCount() {
         return sourceCount;
     }
 }

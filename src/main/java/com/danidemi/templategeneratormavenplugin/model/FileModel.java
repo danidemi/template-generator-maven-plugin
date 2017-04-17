@@ -6,7 +6,7 @@ public class FileModel {
 
     private final File file;
 
-    public FileModel(File file) {
+    FileModel(File file) {
         this.file = file;
     }
 
