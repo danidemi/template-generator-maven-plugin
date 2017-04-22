@@ -20,10 +20,12 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
+import com.danidemi.templategeneratormavenplugin.model.ContextModel;
 import com.danidemi.templategeneratormavenplugin.model.RowModel;
 import org.junit.Test;
 
 import java.util.Iterator;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -37,9 +39,26 @@ public class OneContextPerCsvLineStaxLikeTest {
 
     @Test public void produceContextFromFilteringInputRows() {
 
-        OneContextPerCsvLineStaxLike sut = OneContextPerCsvLineStaxLike.fromClasspath("/codeAndCurrency.csv", row -> row.getData().get("Code").equals("USD"));
+        RowFilter rowFilter = new RowFilter() {
 
-        Iterator<RowModel> ctxIt = sut.iterator();
+            @Override public boolean keep(RowModel row) {
+                return row.getData().get("Code").equals("USD");
+            }
+
+            @Override public boolean keep(ContextModel contextModel) {
+                throw new RuntimeException("fail");
+            }
+
+            @Override public boolean keep(Map<String, Object> map) {
+                throw new RuntimeException("fail");
+            }
+        };
+
+        OneContextPerCsvLineStaxLike sut = OneContextPerCsvLineStaxLike.fromClasspath("/codeAndCurrency.csv",
+                rowFilter
+        );
+
+        Iterator<RowModel> ctxIt = sut.contexts().iterator().next().rowIterator().iterator();
 
         RowModel ctx;
         ctx = ctxIt.next();
@@ -54,7 +73,7 @@ public class OneContextPerCsvLineStaxLikeTest {
 
         OneContextPerCsvLineStaxLike sut = OneContextPerCsvLineStaxLike.fromClasspath("/codeAndCurrency.csv", new IncludeAllRowFilter());
 
-        Iterator<RowModel> ctxIt = sut.iterator();
+        Iterator<RowModel> ctxIt = sut.contexts().iterator().next().rowIterator().iterator();
 
         RowModel ctx;
         ctx = ctxIt.next();
@@ -89,7 +108,7 @@ public class OneContextPerCsvLineStaxLikeTest {
 
         OneContextPerCsvLineStaxLike sut = OneContextPerCsvLineStaxLike.fromClasspath("/codeAndCountry.csv", new IncludeAllRowFilter());
 
-        Iterator<RowModel> ctxIt = sut.iterator();
+        Iterator<RowModel> ctxIt = sut.contexts().iterator().next().rowIterator().iterator();
 
         RowModel ctx;
         ctx = ctxIt.next();

@@ -23,9 +23,16 @@ package com.danidemi.templategeneratormavenplugin.generation;
 import com.danidemi.templategeneratormavenplugin.model.ContextModel;
 import com.danidemi.templategeneratormavenplugin.model.RowModel;
 
+import java.util.Map;
+
 public interface RowFilter {
 
     boolean keep(RowModel context);
 
     boolean keep(ContextModel contextModel);
+
+    /**
+     * A row filter is used to decide whether a row from the source should be included ot not.
+     */
+    boolean keep(Map<String, Object> map);
 }

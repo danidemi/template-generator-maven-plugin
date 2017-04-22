@@ -22,8 +22,7 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
-import com.danidemi.templategeneratormavenplugin.generation.IncludeAllRowFilter;
-import com.danidemi.templategeneratormavenplugin.generation.OneContextPerTag;
+import com.danidemi.templategeneratormavenplugin.model.ContextModel;
 import org.junit.Test;
 
 import java.io.File;
@@ -31,9 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class OneContextPerTagTest {
 
@@ -48,12 +45,12 @@ public class OneContextPerTagTest {
         sut.addTagExpression("@{Worker}");
 
         // when
-        Iterator<Map<String, Object>> ctxs = sut.iterator();
+        Iterator<ContextModel> ctxs = sut.contexts().iterator();
 
         // then
         {
             // all rows about Ashley Delarosa
-            Map<String, Object> ctx = ctxs.next();
+            Map<String, Object> ctx = ctxs.next().asMap();
             assertTrue( ctx.keySet().toString(), ctx.containsKey("File") );
             List<Map<String, Object>> rows = (List<Map<String, Object>>) ctx.get("File");
             assertRow(rows, 0, "HQ", "Dafne Nuvolari", "Ashley Delarosa");
@@ -63,7 +60,7 @@ public class OneContextPerTagTest {
         }
         {
             // all rows about Dafne Nuvolari
-            Map<String, Object> ctx = ctxs.next();
+            Map<String, Object> ctx = ctxs.next().asMap();
             assertTrue( ctx.keySet().toString(), ctx.containsKey("File") );
             List<Map<String, Object>> rows = (List<Map<String, Object>>) ctx.get("File");
             assertRow(rows, 0, "HQ", "Dafne Nuvolari", "Ashley Delarosa");
@@ -73,7 +70,7 @@ public class OneContextPerTagTest {
         }
         {
             // all rows about Ciara Wright
-            Map<String, Object> ctx = ctxs.next();
+            Map<String, Object> ctx = ctxs.next().asMap();
             assertTrue( ctx.keySet().toString(), ctx.containsKey("File") );
             List<Map<String, Object>> rows = (List<Map<String, Object>>) ctx.get("File");
             assertRow(rows, 0, "HQ", "Dafne Nuvolari", "Ciara Wright");
@@ -83,7 +80,7 @@ public class OneContextPerTagTest {
         }
         {
             // all rows about Ganda Ramasamy
-            Map<String, Object> ctx = ctxs.next();
+            Map<String, Object> ctx = ctxs.next().asMap();
             assertTrue( ctx.keySet().toString(), ctx.containsKey("File") );
             List<Map<String, Object>> rows = (List<Map<String, Object>>) ctx.get("File");
             assertRow(rows, 0, "HQ", "Dafne Nuvolari", "Ganda Ramasamy");
@@ -93,7 +90,7 @@ public class OneContextPerTagTest {
         }
         {
             // all rows about Sumiko Hiratasuka
-            Map<String, Object> ctx = ctxs.next();
+            Map<String, Object> ctx = ctxs.next().asMap();
             assertTrue( ctx.keySet().toString(), ctx.containsKey("File") );
             List<Map<String, Object>> rows = (List<Map<String, Object>>) ctx.get("File");
             assertRow(rows, 0, "IT", "Ciara Wright", "Sumiko Hiratasuka");
@@ -101,7 +98,7 @@ public class OneContextPerTagTest {
         }
         {
             // all rows about Adela Dvorak
-            Map<String, Object> ctx = ctxs.next();
+            Map<String, Object> ctx = ctxs.next().asMap();
             assertTrue( ctx.keySet().toString(), ctx.containsKey("File") );
             List<Map<String, Object>> rows = (List<Map<String, Object>>) ctx.get("File");
             assertRow(rows, 0, "IT", "Ciara Wright", "Adela Dvorak");
@@ -109,7 +106,7 @@ public class OneContextPerTagTest {
         }
         {
             // all rows about San Hye-young
-            Map<String, Object> ctx = ctxs.next();
+            Map<String, Object> ctx = ctxs.next().asMap();
             assertTrue( ctx.keySet().toString(), ctx.containsKey("File") );
             List<Map<String, Object>> rows = (List<Map<String, Object>>) ctx.get("File");
             assertRow(rows, 0, "Account", "Ashley Delarosa", "San Hye-young");
@@ -117,7 +114,7 @@ public class OneContextPerTagTest {
         }
         {
             // all rows about Nabila Fahim
-            Map<String, Object> ctx = ctxs.next();
+            Map<String, Object> ctx = ctxs.next().asMap();
             assertTrue( ctx.keySet().toString(), ctx.containsKey("File") );
             List<Map<String, Object>> rows = (List<Map<String, Object>>) ctx.get("File");
             assertRow(rows, 0, "Account", "Ashley Delarosa", "Nabila Fahim");
@@ -125,7 +122,7 @@ public class OneContextPerTagTest {
         }
         {
             // all rows about Nabila Fahim
-            Map<String, Object> ctx = ctxs.next();
+            Map<String, Object> ctx = ctxs.next().asMap();
             assertTrue( ctx.keySet().toString(), ctx.containsKey("File") );
             List<Map<String, Object>> rows = (List<Map<String, Object>>) ctx.get("File");
             assertRow(rows, 0, "Sale", "Ganda Ramasamy", "Sezen Muhtar");
@@ -133,7 +130,7 @@ public class OneContextPerTagTest {
         }
         {
             // all rows about Gabriela Telles Salgado
-            Map<String, Object> ctx = ctxs.next();
+            Map<String, Object> ctx = ctxs.next().asMap();
             assertTrue( ctx.keySet().toString(), ctx.containsKey("File") );
             List<Map<String, Object>> rows = (List<Map<String, Object>>) ctx.get("File");
             assertRow(rows, 0, "Sale", "Ganda Ramasamy", "Gabriela Telles Salgado");

@@ -20,7 +20,10 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
+import com.danidemi.templategeneratormavenplugin.model.ContextModel;
 import com.danidemi.templategeneratormavenplugin.model.RowModel;
+
+import java.util.Map;
 
 public class ExcludeFilter implements RowFilter {
 
@@ -30,8 +33,15 @@ public class ExcludeFilter implements RowFilter {
         this.rowFilter = rowFilter;
     }
 
-    @Override
-    public boolean keep(RowModel rowModel) {
-        return !rowFilter.keep(rowModel);
+    @Override public boolean keep(RowModel context) {
+        return !rowFilter.keep(context);
+    }
+
+    @Override public boolean keep(ContextModel contextModel) {
+        return !rowFilter.keep(contextModel);
+    }
+
+    @Override public boolean keep(Map<String, Object> map) {
+        return !rowFilter.keep(map);
     }
 }

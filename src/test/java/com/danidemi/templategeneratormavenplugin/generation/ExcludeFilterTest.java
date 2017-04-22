@@ -20,24 +20,40 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
+import com.danidemi.templategeneratormavenplugin.model.ContextModel;
+import com.danidemi.templategeneratormavenplugin.model.RowModel;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class ExcludeFilterTest {
 
     @Test
     public void shouldDiscardSomethingKept() {
-        assertThat( new ExcludeFilter(context -> true).keep(new HashMap<>()), is(false) );
+
+        assertThat( new ExcludeFilter(new IncludeAllRowFilter()).keep(new HashMap<>()), is(false) );
     }
 
     @Test
     public void shouldKeepSomethingDiscarded() {
-        assertThat( new ExcludeFilter(context -> false).keep(new HashMap<>()), is(true) );
+
+        assertThat( new ExcludeFilter(new IncludeAllRowFilter(){
+            @Override public boolean keep(RowModel context) {
+                return false;
+            }
+
+            @Override public boolean keep(ContextModel contextModel) {
+                return false;
+            }
+
+            @Override public boolean keep(Map<String, Object> map) {
+                return false;
+            }
+        }).keep(new HashMap<>()), is(true) );
     }
 
 }

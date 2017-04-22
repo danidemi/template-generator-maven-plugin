@@ -20,7 +20,7 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
-import org.hamcrest.CoreMatchers;
+import com.danidemi.templategeneratormavenplugin.model.ContextModel;
 import org.junit.Test;
 
 import java.util.Iterator;
@@ -29,7 +29,7 @@ import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 
 public class OneContextPerCsvFileTest {
@@ -42,35 +42,34 @@ public class OneContextPerCsvFileTest {
 
         OneContextPerCsvFile sut = OneContextPerCsvFile.fromClasspath("/codeAndCurrency.csv");
 
-        Iterator<Map<String, Object>> ctxIt = sut.iterator();
+        Iterator<ContextModel> ctxIt = sut.contexts().iterator();
 
-        Map<String, Object> ctx;
+        ContextModel ctx;
         ctx = ctxIt.next();
 
-        assertThat( "Keys are:" + ctx.keySet(), ctx.containsKey("File"), is(true));
-        assertThat( ctx.get("TotalRows"), equalTo(3) );
-        assertThat( ctx.get("LastIndex"), equalTo(2) );
+        assertThat( ctx.getMeta().getCount().getRows(), equalTo(3) );
+        assertThat( ctx.getMeta().getCount().getLastIndex(), equalTo(2) );
 
 
-        List< Map<String, Object> > rows = (List<Map<String, Object>>) ctx.get("File");
+        List< Map<String, Object> > rows = (List<Map<String, Object>>) ctx.rowIterator().iterator();
 
-        ctx = rows.get(0);
-        assertThat( ctx.get("RowIndex"), equalTo(0) );
-        assertThat( ctx.get("RowCount"), equalTo(1) );
-        assertThat( ctx.get("Code"), equalTo("EUR") );
-        assertThat( ctx.get("Currency"), equalTo("Euro") );
+        Map<String, Object> rowCtx = rows.get(0);
+        assertThat( rowCtx.get("RowIndex"), equalTo(0) );
+        assertThat( rowCtx.get("RowCount"), equalTo(1) );
+        assertThat( rowCtx.get("Code"), equalTo("EUR") );
+        assertThat( rowCtx.get("Currency"), equalTo("Euro") );
 
-        ctx = rows.get(1);
-        assertThat( ctx.get("RowIndex"), equalTo(1) );
-        assertThat( ctx.get("RowCount"), equalTo(2) );
-        assertThat( ctx.get("Code"), equalTo("USD") );
-        assertThat( ctx.get("Currency"), equalTo("Dollar") );
+        rowCtx = rows.get(1);
+        assertThat( rowCtx.get("RowIndex"), equalTo(1) );
+        assertThat( rowCtx.get("RowCount"), equalTo(2) );
+        assertThat( rowCtx.get("Code"), equalTo("USD") );
+        assertThat( rowCtx.get("Currency"), equalTo("Dollar") );
 
-        ctx = rows.get(2);
-        assertThat( ctx.get("RowIndex"), equalTo(2) );
-        assertThat( ctx.get("RowCount"), equalTo(3) );
-        assertThat( ctx.get("Code"), equalTo("GBP") );
-        assertThat( ctx.get("Currency"), equalTo("Pound") );
+        rowCtx = rows.get(2);
+        assertThat( rowCtx.get("RowIndex"), equalTo(2) );
+        assertThat( rowCtx.get("RowCount"), equalTo(3) );
+        assertThat( rowCtx.get("Code"), equalTo("GBP") );
+        assertThat( rowCtx.get("Currency"), equalTo("Pound") );
 
         assertThat(ctxIt.hasNext(), is(false));
 

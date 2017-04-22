@@ -23,6 +23,8 @@ package com.danidemi.templategeneratormavenplugin.generation;
 import com.danidemi.templategeneratormavenplugin.model.ContextModel;
 import com.danidemi.templategeneratormavenplugin.model.RowModel;
 
+import java.util.Map;
+
 public class JuelRowFilter implements RowFilter {
 
     private final String includeRowExpression;
@@ -42,6 +44,13 @@ public class JuelRowFilter implements RowFilter {
         String includeRowExpression = this.includeRowExpression;
         Class<Boolean> aClass = Boolean.class;
         Boolean result = new JuelEval<Boolean>().invoke(contextModel, includeRowExpression);
+        return result;
+    }
+
+    @Override public boolean keep(Map<String, Object> map) {
+        String includeRowExpression = this.includeRowExpression;
+        Class<Boolean> aClass = Boolean.class;
+        Boolean result = new JuelEval<Boolean>().invoke(map, includeRowExpression);
         return result;
     }
 

@@ -34,7 +34,7 @@ public class ContextModel {
         this.rows = rows;
     }
 
-    ContextMetaModel getMeta() {
+    public ContextMetaModel getMeta() {
         return meta;
     }
 

@@ -18,17 +18,19 @@ public class ContextModelTest {
     @Test public void createContext() {
 
         // given
-        ContextModel sut = new ContextModel();
+        ContextModelBuilder sut = new ContextModelBuilder();
 
         // when
         Map<String, Object> row = new HashMap<>();
-        sut.addRow( row, 13 );
+        sut.toRows().add( row, 13 );
+        ContextModel ctx = sut.build();
 
         // then
-        assertEquals( 1, sut.getRows().get(0).getMeta().getCount() );
-        assertEquals( 0, sut.getRows().get(0).getMeta().getIndex() );
-        assertEquals( 13, sut.getRows().get(0).getMeta().getSourceCount() );
-        assertEquals( 12, sut.getRows().get(0).getMeta().getSourceIndex() );
+        RowModel roww = ctx.rowIterator().iterator().next();
+        assertEquals( 1, roww.getMeta().getCount() );
+        assertEquals( 0, roww.getMeta().getIndex() );
+        assertEquals( 13, roww.getMeta().getSourceCount() );
+        assertEquals( 12, roww.getMeta().getSourceIndex() );
 
     }
 
@@ -40,10 +42,9 @@ public class ContextModelTest {
         File target = tmp.newFile("target.txt");
 
         // when
-        ContextModel sut = new ContextModel()
-                .withTemplate(template)
+        ContextModel sut = new ContextModelBuilder()
                 .withSource(source)
-                .withTarget(target);
+                .withTarget(target).build();
 
         // then
         assertEquals(template.getAbsolutePath(), sut.getMeta().getTemplate().getAbsolutePath());

@@ -47,6 +47,11 @@ public class JuelEval<T> {
         return (T) result;
     }
 
+    public T invoke(Map<String, Object> row, String includeRowExpressionssion) {
+        Object result = eval(includeRowExpressionssion, row);
+        return (T) result;
+    }
+
     private Object eval(String expression, Map<String, Object> map) {
         SimpleContext juelContext = new SimpleContext();
         map.entrySet().forEach( (e)->{
@@ -57,4 +62,6 @@ public class JuelEval<T> {
         ValueExpression e = factory.createValueExpression(juelContext, expression, Object.class);
         return e.getValue(juelContext);
     }
+
+
 }

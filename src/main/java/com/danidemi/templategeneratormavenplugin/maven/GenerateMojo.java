@@ -148,7 +148,9 @@ public class GenerateMojo extends AbstractMojo {
             StringWriter content = contentMerger.mergeTemplateIntoStringWriter(tfc.asReader(), contextModel);
 
             // store the file
-            String fileName = fileNameMerger.mergeTemplateIntoStringWriter(this.fileNameTemplate, contextModel).toString();
+            String fileName = fileNameMerger
+                    .mergeTemplateIntoStringWriter(this.fileNameTemplate, contextModel)
+                    .toString();
             fs.storeContentToFile(content, fileName);
 
         }

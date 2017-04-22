@@ -22,6 +22,8 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
+import com.danidemi.templategeneratormavenplugin.model.ContextModel;
+import com.danidemi.templategeneratormavenplugin.model.ContextModelBuilder;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -50,8 +52,11 @@ public class OneContextPerTag implements ContextCreator {
         this.tagExpressions = new ArrayList<>();
     }
 
-    @Override public Iterator<Map<String, Object>> iterator() {
+
+    @Override public Iterable<ContextModel> contexts() {
+
         try {
+
             // get the reader from the resource
             Reader in = new FileReader(file);
             CSVParser parser = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(in);
@@ -77,10 +82,9 @@ public class OneContextPerTag implements ContextCreator {
                 }
             });
 
-            Map<String, List<Map<String, Object>>> tag2context = new LinkedHashMap<>();
+            Map<String, ContextModelBuilder> tag2context = new LinkedHashMap<>();
             while(iterator2.hasNext()){
                 Map<String, Object> row = iterator2.next();
-
                 Set<String> tagsForRow = new HashSet<>();
 
                 for (String tagExpression : tagExpressions) {
@@ -91,23 +95,19 @@ public class OneContextPerTag implements ContextCreator {
 
                 for (String tagForRow : tagsForRow) {
                     if(!tag2context.containsKey(tagForRow)){
-                        tag2context.put(tagForRow, new ArrayList<>());
+                        tag2context.put(tagForRow, new ContextModelBuilder());
                     }
-                    tag2context.get(tagForRow).add(row);
+                    tag2context.get(tagForRow).toRows().add( row, 1 );
                 }
 
             }
 
-            List<Map<String, Object>> ctxs = new ArrayList<>();
-            for (Map.Entry<String, List<Map<String, Object>>> stringListEntry : tag2context.entrySet()) {
-
-                HashMap<String, Object> ctx = new HashMap<>();
-                ctx.put("File", stringListEntry.getValue());
-
-                ctxs.add(ctx);
+            List<ContextModel> ctxs = new ArrayList<>();
+            for (Map.Entry<String, ContextModelBuilder> stringListEntry : tag2context.entrySet()) {
+                ctxs.add(stringListEntry.getValue().build());
             }
 
-            return ctxs.iterator();
+            return ctxs;
 
         }catch (Exception e){
             throw new RuntimeException(e);
@@ -117,4 +117,5 @@ public class OneContextPerTag implements ContextCreator {
     public void addTagExpression(String expression) {
         this.tagExpressions.add(expression);
     }
+
 }
