@@ -1,4 +1,4 @@
-package com.danidemi.templategeneratormavenplugin.generation;
+package com.danidemi.templategeneratormavenplugin.generation.impl;
 
 /*-
  * #%L
@@ -20,17 +20,20 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
+import com.danidemi.templategeneratormavenplugin.generation.RowFilter;
 import com.danidemi.templategeneratormavenplugin.model.IRowModel;
 
 import java.util.function.Predicate;
 
-public interface RowFilter extends Predicate<IRowModel> {
+public class JuelRowFilter implements RowFilter {
 
-    boolean keep(IRowModel row);
+    private final String includeRowExpression;
 
-    default boolean test(IRowModel t){
-        return keep(t);
+    public JuelRowFilter(String includeRowExpression) {
+        this.includeRowExpression = includeRowExpression;
     }
 
-
+    @Override public boolean keep(IRowModel row) {
+        return new JuelEval<Boolean>().invoke(includeRowExpression, "row", row);
+    }
 }

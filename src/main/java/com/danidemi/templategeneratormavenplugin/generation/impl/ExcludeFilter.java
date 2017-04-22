@@ -1,4 +1,4 @@
-package com.danidemi.templategeneratormavenplugin.generation;
+package com.danidemi.templategeneratormavenplugin.generation.impl;
 
 /*-
  * #%L
@@ -20,22 +20,19 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
-import com.danidemi.templategeneratormavenplugin.model.ContextModel;
-import com.danidemi.templategeneratormavenplugin.model.RowModel;
+import com.danidemi.templategeneratormavenplugin.generation.RowFilter;
+import com.danidemi.templategeneratormavenplugin.model.IRowModel;
 
-import java.util.Map;
+public class ExcludeFilter implements RowFilter {
 
-public class IncludeAllRowFilter implements com.danidemi.templategeneratormavenplugin.generation.RowFilter {
+    private final RowFilter rowFilter;
 
-    @Override public boolean keep(RowModel context) {
-        return true;
+    public ExcludeFilter(RowFilter rowFilter) {
+        this.rowFilter = rowFilter;
     }
 
-    @Override public boolean keep(ContextModel contextModel) {
-        return true;
+    @Override public boolean keep(IRowModel context) {
+        return !rowFilter.keep(context);
     }
 
-    @Override public boolean keep(Map<String, Object> map) {
-        return false;
-    }
 }

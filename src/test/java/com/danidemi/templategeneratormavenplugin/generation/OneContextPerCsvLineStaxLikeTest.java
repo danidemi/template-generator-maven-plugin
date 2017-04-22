@@ -20,85 +20,53 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
-import com.danidemi.templategeneratormavenplugin.model.ContextModel;
-import com.danidemi.templategeneratormavenplugin.model.RowModel;
+import com.danidemi.templategeneratormavenplugin.generation.impl.CsvRowSource;
+import com.danidemi.templategeneratormavenplugin.generation.impl.OneContextPerCsvLineStaxLike;
+import com.danidemi.templategeneratormavenplugin.model.IRowModel;
 import org.junit.Test;
 
+import java.io.InputStreamReader;
 import java.util.Iterator;
-import java.util.Map;
 
+import static com.danidemi.templategeneratormavenplugin.TestUtils.mockPrototype;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class OneContextPerCsvLineStaxLikeTest {
 
-    @Test(expected = IllegalArgumentException.class) public void failWhenSourceDoesNotExist() {
-        OneContextPerCsvLineStaxLike sut = OneContextPerCsvLineStaxLike.fromClasspath("/does-not-exists", new IncludeAllRowFilter());
-    }
-
-    @Test public void produceContextFromFilteringInputRows() {
-
-        RowFilter rowFilter = new RowFilter() {
-
-            @Override public boolean keep(RowModel row) {
-                return row.getData().get("Code").equals("USD");
-            }
-
-            @Override public boolean keep(ContextModel contextModel) {
-                throw new RuntimeException("fail");
-            }
-
-            @Override public boolean keep(Map<String, Object> map) {
-                throw new RuntimeException("fail");
-            }
-        };
-
-        OneContextPerCsvLineStaxLike sut = OneContextPerCsvLineStaxLike.fromClasspath("/codeAndCurrency.csv",
-                rowFilter
-        );
-
-        Iterator<RowModel> ctxIt = sut.contexts().iterator().next().rowIterator().iterator();
-
-        RowModel ctx;
-        ctx = ctxIt.next();
-        assertThat( ctx.getData().get("Code"), equalTo("USD") );
-        assertThat( ctx.getData().get("Currency"), equalTo("Dollar") );
-
-        assertThat(ctxIt.hasNext(), is(false));
-
-    }
-
     @Test public void produceContextFromAnotherCsvFile() {
 
-        OneContextPerCsvLineStaxLike sut = OneContextPerCsvLineStaxLike.fromClasspath("/codeAndCurrency.csv", new IncludeAllRowFilter());
+        OneContextPerCsvLineStaxLike sut = new OneContextPerCsvLineStaxLike(
+                new CsvRowSource(
+                        new InputStreamReader( Object.class.getResourceAsStream("/codeAndCurrency.csv") ) ), mockPrototype());
 
-        Iterator<RowModel> ctxIt = sut.contexts().iterator().next().rowIterator().iterator();
+        Iterator<IRowModel> ctxIt = sut.contexts().iterator().next().rowIterator().iterator();
 
-        RowModel ctx;
-        ctx = ctxIt.next();
-        assertThat( ctx.getData().get("Code"), equalTo("EUR") );
-        assertThat( ctx.getData().get("Currency"), equalTo("Euro") );
-        assertThat( ctx.getMeta().getSourceIndex(), equalTo(0) );
-        assertThat( ctx.getMeta().getSourceCount(), equalTo(0) );
-        assertThat( ctx.getMeta().getIndex(), equalTo(0) );
-        assertThat( ctx.getMeta().getCount(), equalTo(0) );
+        IRowModel row;
+        row = ctxIt.next();
+        assertThat( row.getData().get("Code"), equalTo("EUR") );
+        assertThat( row.getData().get("Currency"), equalTo("Euro") );
+        assertThat( row.getMeta().getSourceCount(), equalTo(1L) );
+        assertThat( row.getMeta().getSourceIndex(), equalTo(0L) );
+        assertThat( row.getMeta().getIndex(), equalTo(0L) );
+        assertThat( row.getMeta().getCount(), equalTo(1L) );
 
-        ctx = ctxIt.next();
-        assertThat( ctx.getData().get("Code"), equalTo("USD") );
-        assertThat( ctx.getData().get("Currency"), equalTo("Dollar") );
-        assertThat( ctx.getMeta().getSourceIndex(), equalTo(0) );
-        assertThat( ctx.getMeta().getSourceCount(), equalTo(0) );
-        assertThat( ctx.getMeta().getIndex(), equalTo(0) );
-        assertThat( ctx.getMeta().getCount(), equalTo(0) );
+        row = ctxIt.next();
+        assertThat( row.getData().get("Code"), equalTo("USD") );
+        assertThat( row.getData().get("Currency"), equalTo("Dollar") );
+        assertThat( row.getMeta().getSourceCount(), equalTo(1L) );
+        assertThat( row.getMeta().getSourceIndex(), equalTo(0L) );
+        assertThat( row.getMeta().getIndex(), equalTo(0L) );
+        assertThat( row.getMeta().getCount(), equalTo(1L) );
 
-        ctx = ctxIt.next();
-        assertThat( ctx.getData().get("Code"), equalTo("GBP") );
-        assertThat( ctx.getData().get("Currency"), equalTo("Pound") );
-        assertThat( ctx.getMeta().getSourceIndex(), equalTo(0) );
-        assertThat( ctx.getMeta().getSourceCount(), equalTo(0) );
-        assertThat( ctx.getMeta().getIndex(), equalTo(0) );
-        assertThat( ctx.getMeta().getCount(), equalTo(0) );
+        row = ctxIt.next();
+        assertThat( row.getData().get("Code"), equalTo("GBP") );
+        assertThat( row.getData().get("Currency"), equalTo("Pound") );
+        assertThat( row.getMeta().getSourceCount(), equalTo(1L) );
+        assertThat( row.getMeta().getSourceIndex(), equalTo(0L) );
+        assertThat( row.getMeta().getIndex(), equalTo(0L) );
+        assertThat( row.getMeta().getCount(), equalTo(1L) );
 
         assertThat(ctxIt.hasNext(), is(false));
 
@@ -106,91 +74,79 @@ public class OneContextPerCsvLineStaxLikeTest {
 
     @Test public void produceAContextForEachRowInCsvFile() {
 
-        OneContextPerCsvLineStaxLike sut = OneContextPerCsvLineStaxLike.fromClasspath("/codeAndCountry.csv", new IncludeAllRowFilter());
+        OneContextPerCsvLineStaxLike sut = new OneContextPerCsvLineStaxLike(
+                new CsvRowSource(
+                        new InputStreamReader( Object.class.getResourceAsStream("/codeAndCountry.csv") ) ), mockPrototype());
 
-        Iterator<RowModel> ctxIt = sut.contexts().iterator().next().rowIterator().iterator();
+        Iterator<IRowModel> ctxIt = sut.contexts().iterator().next().rowIterator().iterator();
 
-        RowModel ctx;
+        IRowModel ctx;
         ctx = ctxIt.next();
         assertThat( ctx.getData().get("Code"), equalTo("IT") );
         assertThat( ctx.getData().get("Country"), equalTo("Italy") );
         assertThat( ctx.getData().get("Continent"), equalTo("Europe") );
-        assertThat( ctx.getMeta().getSourceIndex(), equalTo(0) );
-        assertThat( ctx.getMeta().getSourceCount(), equalTo(0) );
-        assertThat( ctx.getMeta().getIndex(), equalTo(0) );
-        assertThat( ctx.getMeta().getCount(), equalTo(0) );
+        assertThat( ctx.getMeta().getSourceIndex(), equalTo(0L) );
+        assertThat( ctx.getMeta().getSourceCount(), equalTo(1L) );
+        assertThat( ctx.getMeta().getIndex(), equalTo(0L) );
+        assertThat( ctx.getMeta().getCount(), equalTo(1L) );
 
         ctx = ctxIt.next();
         assertThat( ctx.getData().get("Code"), equalTo("DE") );
         assertThat( ctx.getData().get("Country"), equalTo("Germany") );
         assertThat( ctx.getData().get("Continent"), equalTo("Europe") );
-        assertThat( ctx.getMeta().getSourceIndex(), equalTo(0) );
-        assertThat( ctx.getMeta().getSourceCount(), equalTo(0) );
-        assertThat( ctx.getMeta().getIndex(), equalTo(0) );
-        assertThat( ctx.getMeta().getCount(), equalTo(0) );
+        assertThat( ctx.getMeta().getSourceIndex(), equalTo(1L) );
+        assertThat( ctx.getMeta().getSourceCount(), equalTo(2L) );
+        assertThat( ctx.getMeta().getIndex(), equalTo(1L) );
+        assertThat( ctx.getMeta().getCount(), equalTo(2L) );
 
         ctx = ctxIt.next();
         assertThat( ctx.getData().get("Code"), equalTo("FR") );
         assertThat( ctx.getData().get("Country"), equalTo("France") );
         assertThat( ctx.getData().get("Continent"), equalTo("Europe") );
-        assertThat( ctx.getMeta().getSourceIndex(), equalTo(0) );
-        assertThat( ctx.getMeta().getSourceCount(), equalTo(0) );
-        assertThat( ctx.getMeta().getIndex(), equalTo(0) );
-        assertThat( ctx.getMeta().getCount(), equalTo(0) );
+        assertThat( ctx.getMeta().getSourceIndex(), equalTo(2L) );
+        assertThat( ctx.getMeta().getIndex(), equalTo(2L) );
 
         ctx = ctxIt.next();
         assertThat( ctx.getData().get("Code"), equalTo("ES") );
         assertThat( ctx.getData().get("Country"), equalTo("Spain") );
         assertThat( ctx.getData().get("Continent"), equalTo("Europe") );
-        assertThat( ctx.getMeta().getSourceIndex(), equalTo(0) );
-        assertThat( ctx.getMeta().getSourceCount(), equalTo(0) );
-        assertThat( ctx.getMeta().getIndex(), equalTo(0) );
-        assertThat( ctx.getMeta().getCount(), equalTo(0) );
+        assertThat( ctx.getMeta().getSourceIndex(), equalTo(3L) );
+        assertThat( ctx.getMeta().getIndex(), equalTo(3L) );
 
         ctx = ctxIt.next();
         assertThat( ctx.getData().get("Code"), equalTo("US") );
         assertThat( ctx.getData().get("Country"), equalTo("United States") );
         assertThat( ctx.getData().get("Continent"), equalTo("North America") );
-        assertThat( ctx.getMeta().getSourceIndex(), equalTo(0) );
-        assertThat( ctx.getMeta().getSourceCount(), equalTo(0) );
-        assertThat( ctx.getMeta().getIndex(), equalTo(0) );
-        assertThat( ctx.getMeta().getCount(), equalTo(0) );
+        assertThat( ctx.getMeta().getSourceIndex(), equalTo(4L) );
+        assertThat( ctx.getMeta().getIndex(), equalTo(4L) );
 
         ctx = ctxIt.next();
         assertThat( ctx.getData().get("Code"), equalTo("EG") );
         assertThat( ctx.getData().get("Country"), equalTo("Egypt") );
         assertThat( ctx.getData().get("Continent"), equalTo("Africa") );
-        assertThat( ctx.getMeta().getSourceIndex(), equalTo(0) );
-        assertThat( ctx.getMeta().getSourceCount(), equalTo(0) );
-        assertThat( ctx.getMeta().getIndex(), equalTo(0) );
-        assertThat( ctx.getMeta().getCount(), equalTo(0) );
+        assertThat( ctx.getMeta().getSourceIndex(), equalTo(5L) );
+        assertThat( ctx.getMeta().getIndex(), equalTo(5L) );
 
         ctx = ctxIt.next();
         assertThat( ctx.getData().get("Code"), equalTo("SA") );
         assertThat( ctx.getData().get("Country"), equalTo("South Africa") );
         assertThat( ctx.getData().get("Continent"), equalTo("Africa") );
-        assertThat( ctx.getMeta().getSourceIndex(), equalTo(0) );
-        assertThat( ctx.getMeta().getSourceCount(), equalTo(0) );
-        assertThat( ctx.getMeta().getIndex(), equalTo(0) );
-        assertThat( ctx.getMeta().getCount(), equalTo(0) );
+        assertThat( ctx.getMeta().getSourceIndex(), equalTo(6L) );
+        assertThat( ctx.getMeta().getIndex(), equalTo(6L) );
 
         ctx = ctxIt.next();
         assertThat( ctx.getData().get("Code"), equalTo("CH") );
         assertThat( ctx.getData().get("Country"), equalTo("China") );
         assertThat( ctx.getData().get("Continent"), equalTo("Asia") );
-        assertThat( ctx.getMeta().getSourceIndex(), equalTo(0) );
-        assertThat( ctx.getMeta().getSourceCount(), equalTo(0) );
-        assertThat( ctx.getMeta().getIndex(), equalTo(0) );
-        assertThat( ctx.getMeta().getCount(), equalTo(0) );
+        assertThat( ctx.getMeta().getSourceIndex(), equalTo(7L) );
+        assertThat( ctx.getMeta().getIndex(), equalTo(7L) );
 
         ctx = ctxIt.next();
         assertThat( ctx.getData().get("Code"), equalTo("RU") );
         assertThat( ctx.getData().get("Country"), equalTo("Russia") );
         assertThat( ctx.getData().get("Continent"), equalTo("Asia") );
-        assertThat( ctx.getMeta().getSourceIndex(), equalTo(0) );
-        assertThat( ctx.getMeta().getSourceCount(), equalTo(0) );
-        assertThat( ctx.getMeta().getIndex(), equalTo(0) );
-        assertThat( ctx.getMeta().getCount(), equalTo(0) );
+        assertThat( ctx.getMeta().getSourceIndex(), equalTo(8L) );
+        assertThat( ctx.getMeta().getIndex(), equalTo(8L) );
 
         assertThat(ctxIt.hasNext(), is(false));
 

@@ -20,12 +20,10 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
-import com.danidemi.templategeneratormavenplugin.model.ContextModel;
-import com.danidemi.templategeneratormavenplugin.model.RowModel;
+import com.danidemi.templategeneratormavenplugin.generation.impl.ExcludeFilter;
+import com.danidemi.templategeneratormavenplugin.generation.impl.IncludeAllRowFilter;
+import com.danidemi.templategeneratormavenplugin.model.IRowModel;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -35,25 +33,20 @@ public class ExcludeFilterTest {
     @Test
     public void shouldDiscardSomethingKept() {
 
-        assertThat( new ExcludeFilter(new IncludeAllRowFilter()).keep(new HashMap<>()), is(false) );
+        // TODO: fix
+        IRowModel row = null;
+        assertThat( new ExcludeFilter(new IncludeAllRowFilter()).keep(row), is(false) );
     }
 
     @Test
     public void shouldKeepSomethingDiscarded() {
 
+        IRowModel row = null;
         assertThat( new ExcludeFilter(new IncludeAllRowFilter(){
-            @Override public boolean keep(RowModel context) {
+            @Override public boolean keep(IRowModel context) {
                 return false;
             }
-
-            @Override public boolean keep(ContextModel contextModel) {
-                return false;
-            }
-
-            @Override public boolean keep(Map<String, Object> map) {
-                return false;
-            }
-        }).keep(new HashMap<>()), is(true) );
+        }).keep(row), is(true) );
     }
 
 }

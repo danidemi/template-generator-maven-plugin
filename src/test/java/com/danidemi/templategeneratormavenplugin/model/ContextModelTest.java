@@ -26,7 +26,7 @@ public class ContextModelTest {
         ContextModel ctx = sut.build();
 
         // then
-        RowModel roww = ctx.rowIterator().iterator().next();
+        IRowModel roww = ctx.rowIterator().iterator().next();
         assertEquals( 1, roww.getMeta().getCount() );
         assertEquals( 0, roww.getMeta().getIndex() );
         assertEquals( 13, roww.getMeta().getSourceCount() );

@@ -20,6 +20,7 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
+import com.danidemi.templategeneratormavenplugin.utils.TransformIteratorAdapter;
 import org.junit.Test;
 
 import java.util.Iterator;

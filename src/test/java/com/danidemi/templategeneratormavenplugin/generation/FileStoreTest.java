@@ -20,6 +20,7 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
+import com.danidemi.templategeneratormavenplugin.generation.impl.FileStore;
 import org.codehaus.plexus.util.FileUtils;
 import org.junit.Rule;
 import org.junit.Test;

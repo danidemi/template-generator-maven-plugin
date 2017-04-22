@@ -1,4 +1,4 @@
-package com.danidemi.templategeneratormavenplugin.generation;
+package com.danidemi.templategeneratormavenplugin.utils;
 
 /*-
  * #%L
@@ -28,12 +28,12 @@ import static com.danidemi.templategeneratormavenplugin.utils.Preconditions.vali
 /**
  * Make a new {@link Iterator} out of an existing one, transforming all its element using a provided transformation function.
  */
-class TransformIteratorAdapter<Original, Tranformed> implements Iterator<Tranformed> {
+public class TransformIteratorAdapter<Original, Tranformed> implements Iterator<Tranformed> {
 
     private final Iterator<Original> iterator;
     private final Function<Original, Tranformed> mappingFunction;
 
-    TransformIteratorAdapter(Iterator<Original> iterator, Function<Original, Tranformed> mappingFunction) {
+    public TransformIteratorAdapter(Iterator<Original> iterator, Function<Original, Tranformed> mappingFunction) {
         this.iterator = validateArgumentNotNull(iterator);
         this.mappingFunction = validateArgumentNotNull(mappingFunction);
     }

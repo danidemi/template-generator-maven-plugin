@@ -8,24 +8,37 @@ import java.util.Map;
 
 import static com.danidemi.templategeneratormavenplugin.utils.Preconditions.checkState;
 
-public class ContextModelBuilder {
+public class ContextModelBuilder implements Cloneable {
 
     private File template;
     private File source;
     private File target;
-    private List<RowModel> rows;
-    private Iterable<RowModel> iterable;
+    private List<IRowModel> rows;
+    private Iterable<IRowModel> iterable;
     private List<String> tags;
-    private ContextModel model;
+    volatile private ContextModel model;
+
+    ContextModelBuilder(ContextModelBuilder toClone) {
+        this.template = toClone.template;
+        this.source = toClone.source;
+        this.target = toClone.target;
+        this.rows = toClone.rows != null ? new ArrayList<>(toClone.rows) : null;
+        this.iterable = toClone.iterable;
+        this.tags = toClone.tags != null ? new ArrayList<>(toClone.tags) : null;
+    }
+
+    public ContextModelBuilder(){
+
+    }
 
     public ContextModel build() {
 
         if(model==null) {
 
             checkState(iterable != null ^ rows != null, "You should set either an iterable over rows or the rows.");
-            checkState(template != null);
-            checkState(source != null);
-            checkState(target != null);
+            checkState(template != null, "Please set the template file.");
+            checkState(source != null, "Please set the source file.");
+            checkState(target != null, "Please set the target file.");
 
             ContextModel model = new ContextModel();
 
@@ -92,12 +105,18 @@ public class ContextModelBuilder {
         return rowBuilder;
     }
 
-    public ContextModelBuilder toRows(List<RowModel> rows) {
+    public ContextModelBuilder toRows(List<IRowModel> rows) {
 
         checkState(model == null);
 
         checkState( iterable==null, "You should set either an iterable over rows or the rows." );
         this.iterable = rows;
+        return this;
+    }
+
+    public ContextModelBuilder add(IRowModel row) {
+        if(rows==null) rows = new ArrayList<>();
+        rows.add(row);
         return this;
     }
 
@@ -115,14 +134,17 @@ public class ContextModelBuilder {
             checkState(mainBuilder.model == null);
 
             RowMetaModel meta = new RowMetaModel(rowCount++, sourceCount);
-            RowModel rowModel = new RowModel(data, meta);
+            IRowModel IRowModel = new InMemoryRowModel(data, meta);
             if(mainBuilder.rows == null){
                 mainBuilder.rows = new ArrayList<>();
             }
-            mainBuilder.rows.add(rowModel);
+            mainBuilder.rows.add(IRowModel);
             return this;
         }
 
     }
 
+    @Override public Object clone() {
+        return new ContextModelBuilder(this);
+    }
 }

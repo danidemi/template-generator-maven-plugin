@@ -1,4 +1,4 @@
-package com.danidemi.templategeneratormavenplugin.generation;
+package com.danidemi.templategeneratormavenplugin.generation.impl;
 
 /*-
  * #%L
@@ -20,18 +20,24 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
+import com.danidemi.templategeneratormavenplugin.generation.ContextCreator;
 import com.danidemi.templategeneratormavenplugin.model.ContextModel;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 
 import java.io.Reader;
-import java.io.StringReader;
 import java.io.StringWriter;
 
-public class EasyMerger {
+public class Merger {
 
-    public EasyMerger() {
+    private final Template template;
+    private final ContextCreator contexts;
+    private final FileStore fileStore;
 
+    public Merger(Template template, ContextCreator contexts, FileStore fileStore) {
+        this.template = template;
+        this.contexts = contexts;
+        this.fileStore = fileStore;
     }
 
     public StringWriter mergeTemplateIntoStringWriter(Reader inputStreamReader, ContextModel context) {
@@ -42,7 +48,4 @@ public class EasyMerger {
         return sw;
     }
 
-    public StringWriter mergeTemplateIntoStringWriter(String inputStreamReader, ContextModel contextModel) {
-        return mergeTemplateIntoStringWriter( new StringReader(inputStreamReader), contextModel );
-    }
 }

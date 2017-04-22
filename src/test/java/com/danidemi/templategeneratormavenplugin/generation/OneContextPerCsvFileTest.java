@@ -20,13 +20,16 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
+import com.danidemi.templategeneratormavenplugin.generation.impl.CsvRowSource;
+import com.danidemi.templategeneratormavenplugin.generation.impl.OneContextPerCsvFile;
 import com.danidemi.templategeneratormavenplugin.model.ContextModel;
+import com.danidemi.templategeneratormavenplugin.model.IRowModel;
 import org.junit.Test;
 
+import java.io.InputStreamReader;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
+import static com.danidemi.templategeneratormavenplugin.TestUtils.mockPrototype;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -35,12 +38,14 @@ import static org.junit.Assert.assertThat;
 public class OneContextPerCsvFileTest {
 
     @Test(expected = IllegalArgumentException.class) public void failWhenSourceDoesNotExist() {
-        OneContextPerCsvFile sut = OneContextPerCsvFile.fromClasspath("/does-not-exists");
+        new OneContextPerCsvFile(null, mockPrototype());
     }
 
     @Test public void produceContextFromAnotherCsvFile() {
 
-        OneContextPerCsvFile sut = OneContextPerCsvFile.fromClasspath("/codeAndCurrency.csv");
+        CsvRowSource rowSource = new CsvRowSource(new InputStreamReader(Object.class.getResourceAsStream("/codeAndCurrency.csv")));
+
+        OneContextPerCsvFile sut = new OneContextPerCsvFile(rowSource, mockPrototype());
 
         Iterator<ContextModel> ctxIt = sut.contexts().iterator();
 
@@ -50,29 +55,30 @@ public class OneContextPerCsvFileTest {
         assertThat( ctx.getMeta().getCount().getRows(), equalTo(3) );
         assertThat( ctx.getMeta().getCount().getLastIndex(), equalTo(2) );
 
+        Iterator<IRowModel> rows = ctx.rowIterator().iterator();
 
-        List< Map<String, Object> > rows = (List<Map<String, Object>>) ctx.rowIterator().iterator();
+        IRowModel rowCtx = rows.next();
+        assertThat( rowCtx.getMeta().getIndex(),      equalTo(0L) );
+        assertThat( rowCtx.getMeta().getCount(),      equalTo(1L) );
+        assertThat( rowCtx.getData().get("Code"),     equalTo("EUR") );
+        assertThat( rowCtx.getData().get("Currency"), equalTo("Euro") );
 
-        Map<String, Object> rowCtx = rows.get(0);
-        assertThat( rowCtx.get("RowIndex"), equalTo(0) );
-        assertThat( rowCtx.get("RowCount"), equalTo(1) );
-        assertThat( rowCtx.get("Code"), equalTo("EUR") );
-        assertThat( rowCtx.get("Currency"), equalTo("Euro") );
+        rowCtx = rows.next();
+        assertThat( rowCtx.getMeta().getIndex(),      equalTo(1L) );
+        assertThat( rowCtx.getMeta().getCount(),      equalTo(2L) );
+        assertThat( rowCtx.getData().get("Code"),     equalTo("USD") );
+        assertThat( rowCtx.getData().get("Currency"), equalTo("Dollar") );
 
-        rowCtx = rows.get(1);
-        assertThat( rowCtx.get("RowIndex"), equalTo(1) );
-        assertThat( rowCtx.get("RowCount"), equalTo(2) );
-        assertThat( rowCtx.get("Code"), equalTo("USD") );
-        assertThat( rowCtx.get("Currency"), equalTo("Dollar") );
-
-        rowCtx = rows.get(2);
-        assertThat( rowCtx.get("RowIndex"), equalTo(2) );
-        assertThat( rowCtx.get("RowCount"), equalTo(3) );
-        assertThat( rowCtx.get("Code"), equalTo("GBP") );
-        assertThat( rowCtx.get("Currency"), equalTo("Pound") );
+        rowCtx = rows.next();
+        assertThat( rowCtx.getMeta().getIndex(),      equalTo(2L) );
+        assertThat( rowCtx.getMeta().getCount(),      equalTo(3L) );
+        assertThat( rowCtx.getData().get("Code"),     equalTo("GBP") );
+        assertThat( rowCtx.getData().get("Currency"), equalTo("Pound") );
 
         assertThat(ctxIt.hasNext(), is(false));
 
     }
+
+
 
 }

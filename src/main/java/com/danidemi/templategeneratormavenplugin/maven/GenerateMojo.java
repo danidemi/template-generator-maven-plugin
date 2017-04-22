@@ -21,8 +21,9 @@ package com.danidemi.templategeneratormavenplugin.maven;
  */
 
 import com.danidemi.templategeneratormavenplugin.generation.*;
+import com.danidemi.templategeneratormavenplugin.generation.impl.*;
 import com.danidemi.templategeneratormavenplugin.model.ContextModel;
-import com.danidemi.templategeneratormavenplugin.model.RowModel;
+import com.danidemi.templategeneratormavenplugin.model.ContextModelBuilder;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -31,9 +32,10 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.StringWriter;
 import java.util.Arrays;
-import java.util.Map;
 
 @Mojo(name = "generate")
 public class GenerateMojo extends AbstractMojo {
@@ -105,18 +107,29 @@ public class GenerateMojo extends AbstractMojo {
             rowFilter = new IncludeAllRowFilter();
         }
 
+        // row source
+        RowSource rowSource;
+        try {
+            rowSource = new FilteredRowSource( new CsvRowSource(new FileReader(new File(pathToCsv))), rowFilter );
+        } catch (FileNotFoundException e) {
+            throw new MojoExecutionException("An error occurred while accessing file '" + pathToCsv + "'", e);
+        }
+
+        ContextModelBuilder builderPrototype = new ContextModelBuilder()
+                .withSource( new File(pathToCsv) )
+                .withTemplate( new File(pathToTemplate));
+
         ContextCreator contextCreator;
         if (contextMode == ContextMode.ONE_CONTEXT_PER_CSV) {
-            contextCreator = OneContextPerCsvFile.fromFilepath(pathToCsv, rowFilter);
+            contextCreator = new OneContextPerCsvFile(rowSource, builderPrototype);
         } else if (contextMode == ContextMode.ONE_CONTEXT_PER_LINE) {
-            contextCreator = OneContextPerCsvLineStaxLike.fromFilepath(pathToCsv, rowFilter);
+            contextCreator = new OneContextPerCsvLineStaxLike(rowSource, null);
         } else if(contextMode == ContextMode.ONE_CONTEXT_PER_TAG) {
             {
-                OneContextPerTag ocpt = new OneContextPerTag(pathToCsv, rowFilter);
                 if (this.tagExpressions == null || this.tagExpressions.length == 0) {
                     throw new MojoExecutionException("A list of tagExpressions are required when using " + ContextMode.ONE_CONTEXT_PER_TAG);
                 }
-                Arrays.stream(tagExpressions).forEach(te -> ocpt.addTagExpression(te));
+                OneContextPerTag ocpt = new OneContextPerTag( Arrays.asList( tagExpressions ), rowSource);
                 contextCreator = ocpt;
             }
         } else{

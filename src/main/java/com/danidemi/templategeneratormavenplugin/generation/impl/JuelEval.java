@@ -1,4 +1,4 @@
-package com.danidemi.templategeneratormavenplugin.generation;
+package com.danidemi.templategeneratormavenplugin.generation.impl;
 
 /*-
  * #%L
@@ -23,7 +23,6 @@ package com.danidemi.templategeneratormavenplugin.generation;
  */
 
 import com.danidemi.templategeneratormavenplugin.model.ContextModel;
-import com.danidemi.templategeneratormavenplugin.model.RowModel;
 import de.odysseus.el.ExpressionFactoryImpl;
 import de.odysseus.el.util.SimpleContext;
 
@@ -35,14 +34,15 @@ public class JuelEval<T> {
 
     private final ExpressionFactory factory = new ExpressionFactoryImpl();
 
-    public T invoke(ContextModel context, String includeRowExpression) {
-        Map<String, Object> rowAsMap = context.asMap();
-        Object result = eval(includeRowExpression, rowAsMap);
-        return (T) result;
+    public T invoke(String expression, String key, Object obj){
+        SimpleContext juelContext = new SimpleContext();
+        juelContext.setVariable(key, factory.createValueExpression(obj, obj.getClass()));
+        ValueExpression e = factory.createValueExpression(juelContext, expression, Object.class);
+        return (T) e.getValue(juelContext);
     }
 
-    public T invoke(RowModel row, String includeRowExpression) {
-        Map<String, Object> rowAsMap = row.asMap();
+    public T invoke(ContextModel context, String includeRowExpression) {
+        Map<String, Object> rowAsMap = context.asMap();
         Object result = eval(includeRowExpression, rowAsMap);
         return (T) result;
     }

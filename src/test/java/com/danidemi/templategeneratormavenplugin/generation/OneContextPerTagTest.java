@@ -22,10 +22,14 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
+import com.danidemi.templategeneratormavenplugin.generation.impl.CsvRowSource;
+import com.danidemi.templategeneratormavenplugin.generation.impl.OneContextPerTag;
 import com.danidemi.templategeneratormavenplugin.model.ContextModel;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +44,10 @@ public class OneContextPerTagTest {
         // given
         File csv = new File(getClass().getResource("/organizational.csv").getFile());
 
-        OneContextPerTag sut = new OneContextPerTag(csv.getAbsolutePath(), new IncludeAllRowFilter());
+        OneContextPerTag sut = new OneContextPerTag(Arrays.asList("@{Head}", "@{Worker}"),
+                new CsvRowSource(
+                        new InputStreamReader( Object.class.getResourceAsStream("/organizational.csv") ) ) );
+
         sut.addTagExpression("@{Head}");
         sut.addTagExpression("@{Worker}");
 

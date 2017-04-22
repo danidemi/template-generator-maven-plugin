@@ -1,4 +1,4 @@
-package com.danidemi.templategeneratormavenplugin.generation;
+package com.danidemi.templategeneratormavenplugin.generation.impl;
 
 /*-
  * #%L
@@ -25,18 +25,13 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 
 import java.io.Reader;
+import java.io.StringReader;
 import java.io.StringWriter;
 
-public class Merger {
+public class EasyMerger {
 
-    private final Template template;
-    private final ContextCreator contexts;
-    private final FileStore fileStore;
+    public EasyMerger() {
 
-    public Merger(Template template, ContextCreator contexts, FileStore fileStore) {
-        this.template = template;
-        this.contexts = contexts;
-        this.fileStore = fileStore;
     }
 
     public StringWriter mergeTemplateIntoStringWriter(Reader inputStreamReader, ContextModel context) {
@@ -47,4 +42,7 @@ public class Merger {
         return sw;
     }
 
+    public StringWriter mergeTemplateIntoStringWriter(String inputStreamReader, ContextModel contextModel) {
+        return mergeTemplateIntoStringWriter( new StringReader(inputStreamReader), contextModel );
+    }
 }

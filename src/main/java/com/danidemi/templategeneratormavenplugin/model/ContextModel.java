@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class ContextModel {
 
-    private Iterable<RowModel> rows;
+    private Iterable<IRowModel> rows;
     private File template;
     private File source;
     private File target;
@@ -30,7 +30,7 @@ public class ContextModel {
         this.meta = metaModel;
     }
 
-    void setRows(Iterable<RowModel> rows) {
+    void setRows(Iterable<IRowModel> rows) {
         this.rows = rows;
     }
 
@@ -38,7 +38,7 @@ public class ContextModel {
         return meta;
     }
 
-    public Iterable<RowModel> rowIterator() {
+    public Iterable<IRowModel> rowIterator() {
         return rows;
     }
 

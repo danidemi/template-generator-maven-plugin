@@ -1,4 +1,4 @@
-package com.danidemi.templategeneratormavenplugin.generation;
+package com.danidemi.templategeneratormavenplugin.generation.impl;
 
 /*-
  * #%L
@@ -20,19 +20,17 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.danidemi.templategeneratormavenplugin.model.IRowModel;
 
-public class StringBonification {
+import java.util.function.Predicate;
 
-    public static void main(String[] args) {
-        System.out.println( new StringBonification().bonify("@{row.BTBGClassName.startsWith(\"BG0000\") || row.parentClass.startWith(\"BG0000\")}") );
+public class IncludeAllRowFilter implements com.danidemi.templategeneratormavenplugin.generation.RowFilter, Predicate<IRowModel> {
+
+    @Override public boolean keep(IRowModel context) {
+        return true;
     }
 
-    private String bonify(String s) {
-        //s.replaceAll("@\\{", "${");
-        //return Pattern.compile("@\\{").matcher(s).replaceAll(Matcher.quoteReplacement( "${" ));
-        return s.replace("@{", "${");
+    @Override public boolean test(IRowModel iRowModel) {
+        return keep(iRowModel);
     }
-
 }
