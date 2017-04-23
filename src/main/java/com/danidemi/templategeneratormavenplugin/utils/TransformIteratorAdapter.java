@@ -45,6 +45,7 @@ public class TransformIteratorAdapter<Original, Tranformed> implements Iterator<
 
     @Override
     public Tranformed next() {
-        return mappingFunction.apply(iterator.next());
+        Original next = iterator.next();
+        return mappingFunction.apply(next);
     }
 }
