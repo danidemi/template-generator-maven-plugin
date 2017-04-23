@@ -8,7 +8,7 @@ public class InMemoryRowModel implements IRowModel {
     private final Map<String, Object> data;
     private final RowMetaModel meta;
 
-    InMemoryRowModel(Map<String, Object> data, RowMetaModel meta) {
+    public InMemoryRowModel(Map<String, Object> data, RowMetaModel meta) {
         this.data = data;
         this.meta = meta;
     }

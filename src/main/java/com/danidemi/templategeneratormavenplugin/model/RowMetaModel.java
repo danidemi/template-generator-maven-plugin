@@ -4,7 +4,7 @@ public class RowMetaModel implements IRowMetaModel {
     private final long count;
     private final long sourceCount;
 
-    RowMetaModel(int count, long sourceCount) {
+    public RowMetaModel(int count, long sourceCount) {
         this.count = count;
         this.sourceCount = sourceCount;
     }

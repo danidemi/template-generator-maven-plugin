@@ -22,6 +22,8 @@ package com.danidemi.templategeneratormavenplugin.maven;
 
 import com.danidemi.templategeneratormavenplugin.generation.impl.JuelRowFilter;
 import com.danidemi.templategeneratormavenplugin.model.IRowModel;
+import com.danidemi.templategeneratormavenplugin.model.InMemoryRowModel;
+import com.danidemi.templategeneratormavenplugin.model.RowMetaModel;
 import org.apache.commons.collections.map.HashedMap;
 import org.junit.Test;
 
@@ -32,36 +34,27 @@ public class JuelRowFilterTest {
 
     @Test public void shouldDiscardContextNotSatyisfyingExpression() {
 
-        JuelRowFilter sut = new JuelRowFilter("${a+a>10}");
-
-        // TODO: fix
-        //HashedMap context = newContextWithA(3);
-        IRowModel context = null;
-
+        JuelRowFilter sut = new JuelRowFilter("${row.data.a+row.data.a>10}");
+        IRowModel context = newContextWithA(3);
         boolean discard = sut.keep(context);
-
         assertThat( discard, is(false) );
 
     }
 
     @Test public void shouldNotDiscardContextSatyisfyingExpression() {
 
-        JuelRowFilter sut = new JuelRowFilter("${a<10}");
-
-
-        // TODO: fix
-        //HashedMap context = newContextWithA(5);
-        IRowModel context = null;
-        boolean discard = sut.keep(context);
-
+        JuelRowFilter sut = new JuelRowFilter("${row.data.a<10}");
+        IRowModel iRowModel = newContextWithA(5);
+        boolean discard = sut.keep(iRowModel);
         assertThat( discard, is(true) );
 
     }
 
-    private HashedMap newContextWithA(int a) {
+    private IRowModel newContextWithA(int a) {
         HashedMap context = new HashedMap();
         context.put("a", a);
-        return context;
+        InMemoryRowModel rowModel = new InMemoryRowModel(context, new RowMetaModel(1, 2));
+        return rowModel;
     }
 
 }
