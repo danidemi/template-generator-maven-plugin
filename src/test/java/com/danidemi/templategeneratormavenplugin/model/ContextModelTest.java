@@ -6,7 +6,9 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -15,7 +17,7 @@ public class ContextModelTest {
 
     @Rule public TemporaryFolder tmp = new TemporaryFolder();
 
-    @Test public void createContext() {
+    @Test public void createContext() throws IOException {
 
         // given
         ContextModelBuilder sut = new ContextModelBuilder();
@@ -23,6 +25,9 @@ public class ContextModelTest {
         // when
         Map<String, Object> row = new HashMap<>();
         sut.toRows().add( row, 13 );
+        sut.withTarget(tmp.newFile());
+        sut.withSource(tmp.newFile());
+        sut.withTemplate(tmp.newFile());
         ContextModel ctx = sut.build();
 
         // then
@@ -42,9 +47,13 @@ public class ContextModelTest {
         File target = tmp.newFile("target.txt");
 
         // when
+        List<IRowModel> list = new ArrayList<>();
         ContextModel sut = new ContextModelBuilder()
+                .toRows(list)
                 .withSource(source)
-                .withTarget(target).build();
+                .withTarget(target)
+                .withTemplate(template)
+                .build();
 
         // then
         assertEquals(template.getAbsolutePath(), sut.getMeta().getTemplate().getAbsolutePath());
