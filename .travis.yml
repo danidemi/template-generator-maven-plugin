@@ -1,0 +1,10 @@
+language: java
+jdk:
+  - oraclejdk8
+script: "mvn --show-version --errors --batch-mode clean verify"
+cache:
+    directories:
+    - $HOME/.m2
+branches:
+    except:
+        - gh-pages
