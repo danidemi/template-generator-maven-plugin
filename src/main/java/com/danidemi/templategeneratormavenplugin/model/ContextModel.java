@@ -1,6 +1,9 @@
 package com.danidemi.templategeneratormavenplugin.model;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,5 +47,13 @@ public class ContextModel {
 
     public Map<String, Object> asMap() {
         throw new UnsupportedOperationException();
+    }
+
+    public List<IRowModel> getRows() {
+        List<IRowModel> theRows = new ArrayList<>();
+        for( Iterator<IRowModel> theIterator = rows.iterator(); theIterator.hasNext(); ){
+            theRows.add( theIterator.next() );
+        }
+        return theRows;
     }
 }

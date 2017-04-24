@@ -34,10 +34,12 @@ public class OneContextPerTag implements ContextCreator {
 
     private final List<String> tagExpressions;
     private final RowSource rowSource;
+    private final ContextModelBuilder prototype;
 
-    public OneContextPerTag(List<String> tagExpressions, RowSource rowSource) {
-        this.tagExpressions = tagExpressions;
+    public OneContextPerTag(List<String> tagExpressions, RowSource rowSource, ContextModelBuilder prototype) {
+        this.tagExpressions = new ArrayList<>( tagExpressions );
         this.rowSource = rowSource;
+        this.prototype = prototype;
     }
 
     @Override public Iterable<ContextModel> contexts() {
@@ -55,8 +57,10 @@ public class OneContextPerTag implements ContextCreator {
 
             for (String tag : tagsForRow) {
 
+                if(!tag2context.containsKey(tag)){
+                    tag2context.put(tag, (ContextModelBuilder)prototype.clone());
+                }
                 ContextModelBuilder builder = tag2context.get(tag);
-
                 builder.add(iRowModel);
 
             }

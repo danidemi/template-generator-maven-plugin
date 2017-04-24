@@ -129,7 +129,7 @@ public class GenerateMojo extends AbstractMojo {
                 if (this.tagExpressions == null || this.tagExpressions.length == 0) {
                     throw new MojoExecutionException("A list of tagExpressions are required when using " + ContextMode.ONE_CONTEXT_PER_TAG);
                 }
-                OneContextPerTag ocpt = new OneContextPerTag( Arrays.asList( tagExpressions ), rowSource);
+                OneContextPerTag ocpt = new OneContextPerTag( Arrays.asList( tagExpressions ), rowSource, null);
                 contextCreator = ocpt;
             }
         } else{
