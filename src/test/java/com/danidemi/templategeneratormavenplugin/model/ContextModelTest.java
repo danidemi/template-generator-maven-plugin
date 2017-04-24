@@ -25,7 +25,6 @@ public class ContextModelTest {
         // when
         Map<String, Object> row = new HashMap<>();
         sut.toRows().add( row, 13 );
-        sut.withTarget(tmp.newFile());
         sut.withSource(tmp.newFile());
         sut.withTemplate(tmp.newFile());
         ContextModel ctx = sut.build();
@@ -51,13 +50,11 @@ public class ContextModelTest {
         ContextModel sut = new ContextModelBuilder()
                 .toRows(list)
                 .withSource(source)
-                .withTarget(target)
                 .withTemplate(template)
                 .build();
 
         // then
         assertEquals(template.getAbsolutePath(), sut.getMeta().getTemplate().getAbsolutePath());
-        assertEquals(target.getAbsolutePath(), sut.getMeta().getTarget().getAbsolutePath());
         assertEquals(source.getAbsolutePath(), sut.getMeta().getSource().getAbsolutePath());
 
     }

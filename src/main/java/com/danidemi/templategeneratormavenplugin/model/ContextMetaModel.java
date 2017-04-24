@@ -8,19 +8,16 @@ public class ContextMetaModel {
 
     private final FileModel template;
     private final FileModel source;
-    private final FileModel target;
     private CountModel count;
     private LinkedHashSet<String> tags;
 
-    ContextMetaModel(FileModel template, FileModel source, FileModel target) {
+    ContextMetaModel(FileModel template, FileModel source) {
 
         checkArgument(template!=null );
         checkArgument(source!=null );
-        checkArgument(target!=null );
 
         this.template = template;
         this.source = source;
-        this.target = target;
 
     }
 
@@ -38,10 +35,6 @@ public class ContextMetaModel {
 
     public FileModel getSource() {
         return source;
-    }
-
-    public FileModel getTarget() {
-        return target;
     }
 
     public CountModel getCount() {

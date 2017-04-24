@@ -57,8 +57,7 @@ public class TestUtils {
   public static ContextModelBuilder mockPrototype() {
     return new ContextModelBuilder()
             .withTemplate(File.listRoots()[0])
-            .withSource(File.listRoots()[0])
-            .withTarget(File.listRoots()[0]);
+            .withSource(File.listRoots()[0]);
   }
 
 }

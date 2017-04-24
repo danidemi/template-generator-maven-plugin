@@ -12,7 +12,6 @@ public class ContextModelBuilder implements Cloneable {
 
     private File template;
     private File source;
-    private File target;
     private List<IRowModel> rows;
     private Iterable<IRowModel> iterable;
     private List<String> tags;
@@ -21,7 +20,6 @@ public class ContextModelBuilder implements Cloneable {
     ContextModelBuilder(ContextModelBuilder toClone) {
         this.template = toClone.template;
         this.source = toClone.source;
-        this.target = toClone.target;
         this.rows = toClone.rows != null ? new ArrayList<>(toClone.rows) : null;
         this.iterable = toClone.iterable;
         this.tags = toClone.tags != null ? new ArrayList<>(toClone.tags) : null;
@@ -38,12 +36,11 @@ public class ContextModelBuilder implements Cloneable {
             checkState(iterable != null ^ rows != null, "You should set either an iterable over rows or the rows.");
             checkState(template != null, "Please set the template file.");
             checkState(source != null, "Please set the source file.");
-            checkState(target != null, "Please set the target file.");
 
             ContextModel model = new ContextModel();
 
             // the metamodel
-            ContextMetaModel metaModel = new ContextMetaModel(new FileModel(template), new FileModel(source), new FileModel(target));
+            ContextMetaModel metaModel = new ContextMetaModel(new FileModel(template), new FileModel(source));
             if (rows != null) {
                 metaModel.setCount(new CountModel(rows.size()));
             }
@@ -88,14 +85,6 @@ public class ContextModelBuilder implements Cloneable {
         checkState(model == null);
 
         this.source = source;
-        return this;
-    }
-
-    public ContextModelBuilder withTarget(File target) {
-
-        checkState(model == null);
-
-        this.target = target;
         return this;
     }
 

@@ -48,10 +48,10 @@ public class GenerateMojo extends AbstractMojo {
 
     private Log log = getLog();
 
-    @Parameter( property = "generate.pathToCsv", defaultValue = "/default.csv" )
+    @Parameter( property = "generate.pathToCsv", required = true )
     private String pathToCsv;
 
-    @Parameter( property = "generate.pathToTemplate", defaultValue = "/default.csv" )
+    @Parameter( property = "generate.pathToTemplate", required = true )
     private String pathToTemplate;
 
     @Parameter( property = "generate.pathToOutputFolder", defaultValue = "${build.directory}/generated-sources" )
@@ -146,6 +146,11 @@ public class GenerateMojo extends AbstractMojo {
         boolean contextKept;
         for (ContextModel contextModel : contextCreator.contexts()) {
 
+            // store the file
+            String fileName = fileNameMerger
+                    .mergeTemplateIntoStringWriter(this.fileNameTemplate, contextModel)
+                    .toString();
+
             contextKept = true;
             if(keepContextEval!=null){
                 contextKept = keepContextEval.invoke(contextModel, includeContextExpression);
@@ -161,9 +166,6 @@ public class GenerateMojo extends AbstractMojo {
             StringWriter content = contentMerger.mergeTemplateIntoStringWriter(tfc.asReader(), contextModel);
 
             // store the file
-            String fileName = fileNameMerger
-                    .mergeTemplateIntoStringWriter(this.fileNameTemplate, contextModel)
-                    .toString();
             fs.storeContentToFile(content, fileName);
 
         }

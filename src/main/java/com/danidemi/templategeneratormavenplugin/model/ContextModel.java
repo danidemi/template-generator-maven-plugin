@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * To create a {@link ContextModel context} please use {@link ContextModelBuilder}.
@@ -43,10 +42,6 @@ public class ContextModel {
 
     public Iterable<IRowModel> rowIterator() {
         return rows;
-    }
-
-    public Map<String, Object> asMap() {
-        throw new UnsupportedOperationException();
     }
 
     public List<IRowModel> getRows() {

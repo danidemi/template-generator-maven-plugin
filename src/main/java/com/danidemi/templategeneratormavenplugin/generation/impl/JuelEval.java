@@ -42,9 +42,7 @@ public class JuelEval<T> {
     }
 
     public T invoke(ContextModel context, String includeRowExpression) {
-        Map<String, Object> rowAsMap = context.asMap();
-        Object result = eval(includeRowExpression, rowAsMap);
-        return (T) result;
+        return (T) invoke(includeRowExpression, "source", context);
     }
 
     public T invoke(Map<String, Object> row, String includeRowExpressionssion) {
