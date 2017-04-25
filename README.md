@@ -32,7 +32,7 @@ Git flow with following settings:
     <plugin>
         <groupId>com.danidemi</groupId>
         <artifactId>template-generator-maven-plugin</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.5</version>
     </plugin>
     
 ### Snapshot versions
