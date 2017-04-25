@@ -123,13 +123,13 @@ public class GenerateMojo extends AbstractMojo {
         if (contextMode == ContextMode.ONE_CONTEXT_PER_CSV) {
             contextCreator = new OneContextPerCsvFile(rowSource, builderPrototype);
         } else if (contextMode == ContextMode.ONE_CONTEXT_PER_LINE) {
-            contextCreator = new OneContextPerCsvLineStaxLike(rowSource, null);
+            contextCreator = new OneContextPerCsvLineStaxLike(rowSource, builderPrototype);
         } else if(contextMode == ContextMode.ONE_CONTEXT_PER_TAG) {
             {
                 if (this.tagExpressions == null || this.tagExpressions.length == 0) {
                     throw new MojoExecutionException("A list of tagExpressions are required when using " + ContextMode.ONE_CONTEXT_PER_TAG);
                 }
-                OneContextPerTag ocpt = new OneContextPerTag( Arrays.asList( tagExpressions ), rowSource, null);
+                OneContextPerTag ocpt = new OneContextPerTag( Arrays.asList( tagExpressions ), rowSource, builderPrototype);
                 contextCreator = ocpt;
             }
         } else{
@@ -146,10 +146,13 @@ public class GenerateMojo extends AbstractMojo {
         boolean contextKept;
         for (ContextModel contextModel : contextCreator.contexts()) {
 
+            log.info("New context.");
+
             // store the file
             String fileName = fileNameMerger
                     .mergeTemplateIntoStringWriter(this.fileNameTemplate, contextModel)
                     .toString();
+            log.info("Generated file: " + fileName);
 
             contextKept = true;
             if(keepContextEval!=null){
