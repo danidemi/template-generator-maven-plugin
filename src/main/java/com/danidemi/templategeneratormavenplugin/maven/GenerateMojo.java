@@ -21,6 +21,9 @@ package com.danidemi.templategeneratormavenplugin.maven;
  */
 
 import com.danidemi.templategeneratormavenplugin.generation.*;
+import com.danidemi.templategeneratormavenplugin.generation.impl.*;
+import com.danidemi.templategeneratormavenplugin.model.ContextModel;
+import com.danidemi.templategeneratormavenplugin.model.ContextModelBuilder;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -29,9 +32,10 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.StringWriter;
 import java.util.Arrays;
-import java.util.Map;
 
 @Mojo(name = "generate")
 public class GenerateMojo extends AbstractMojo {
@@ -44,10 +48,10 @@ public class GenerateMojo extends AbstractMojo {
 
     private Log log = getLog();
 
-    @Parameter( property = "generate.pathToCsv", defaultValue = "/default.csv" )
+    @Parameter( property = "generate.pathToCsv", required = true )
     private String pathToCsv;
 
-    @Parameter( property = "generate.pathToTemplate", defaultValue = "/default.csv" )
+    @Parameter( property = "generate.pathToTemplate", required = true )
     private String pathToTemplate;
 
     @Parameter( property = "generate.pathToOutputFolder", defaultValue = "${build.directory}/generated-sources" )
@@ -74,15 +78,15 @@ public class GenerateMojo extends AbstractMojo {
         String pathToTemplate = this.pathToTemplate;
         String pathToOutputFolder = this.pathToOutputFolder;
         String outputFileName = this.fileNameTemplate;
-        String includeRowExpression2 = this.includeRowExpression != null ? this.includeRowExpression.replace("@{", "${") : null;
+        String includeRowExpression = this.includeRowExpression != null ? this.includeRowExpression.replace("@{", "${") : null;
         String includeContextExpression = this.includeContextExpression != null ? this.includeContextExpression.replace("@{", "${") : null;
         ContextMode contextMode = this.contextMode;
 
 
         log.info("Using CSV: '" + pathToCsv + "'");
         log.info("Using template: '" + pathToTemplate + "'");
-        if(includeRowExpression2!=null){
-            log.info("Include only rows satisfing 2: '" + includeRowExpression2 + "'");
+        if(includeRowExpression!=null){
+            log.info("Include only rows satisfing 2: '" + includeRowExpression + "'");
         }else{
             log.info("Include all rows.");
         }
@@ -97,55 +101,71 @@ public class GenerateMojo extends AbstractMojo {
 
 
         RowFilter rowFilter;
-        if(includeRowExpression2!=null){
-            rowFilter = new JuelRowFilter( includeRowExpression2 );
+        if(includeRowExpression!=null){
+            rowFilter = new JuelRowFilter( includeRowExpression );
         }else{
             rowFilter = new IncludeAllRowFilter();
         }
 
-        ContextCreator ctxs;
+        // row source
+        RowSource rowSource;
+        try {
+            rowSource = new FilteredRowSource( new CsvRowSource(new FileReader(new File(pathToCsv))), rowFilter );
+        } catch (FileNotFoundException e) {
+            throw new MojoExecutionException("An error occurred while accessing file '" + pathToCsv + "'", e);
+        }
+
+        ContextModelBuilder builderPrototype = new ContextModelBuilder()
+                .withSource( new File(pathToCsv) )
+                .withTemplate( new File(pathToTemplate));
+
+        ContextCreator contextCreator;
         if (contextMode == ContextMode.ONE_CONTEXT_PER_CSV) {
-            ctxs = OneContextPerCsvFile.fromFilepath(pathToCsv, rowFilter);
+            contextCreator = new OneContextPerCsvFile(rowSource, builderPrototype);
         } else if (contextMode == ContextMode.ONE_CONTEXT_PER_LINE) {
-            ctxs = OneContextPerCsvLine.fromFilepath(pathToCsv, rowFilter);
+            contextCreator = new OneContextPerCsvLineStaxLike(rowSource, null);
         } else if(contextMode == ContextMode.ONE_CONTEXT_PER_TAG) {
-            OneContextPerTag ocpt = new OneContextPerTag(pathToCsv, rowFilter);
-            if(this.tagExpressions == null || this.tagExpressions.length == 0){
-                throw new MojoExecutionException("A list of tagExpressions are required when using " + ContextMode.ONE_CONTEXT_PER_TAG);
+            {
+                if (this.tagExpressions == null || this.tagExpressions.length == 0) {
+                    throw new MojoExecutionException("A list of tagExpressions are required when using " + ContextMode.ONE_CONTEXT_PER_TAG);
+                }
+                OneContextPerTag ocpt = new OneContextPerTag( Arrays.asList( tagExpressions ), rowSource, null);
+                contextCreator = ocpt;
             }
-            Arrays.stream(tagExpressions).forEach( te -> ocpt.addTagExpression(te) );
-            ctxs = ocpt;
         } else{
             throw new IllegalStateException("Unsupported mode");
         }
         Template tfc = Template.fromFilePath(pathToTemplate);
         FileStore fs = new FileStore( new File(pathToOutputFolder) );
-        Merger contentMerger = new Merger(tfc, ctxs, fs);
+        Merger contentMerger = new Merger(tfc, contextCreator, fs);
         EasyMerger fileNameMerger = new EasyMerger();
 
         // get the contexts
         JuelEval<Boolean> keepContextEval = includeContextExpression!=null ? new JuelEval<>() : null;
         int i = 0;
         boolean contextKept;
-        for (Map<String, Object> context : ctxs) {
+        for (ContextModel contextModel : contextCreator.contexts()) {
+
+            // store the file
+            String fileName = fileNameMerger
+                    .mergeTemplateIntoStringWriter(this.fileNameTemplate, contextModel)
+                    .toString();
 
             contextKept = true;
             if(keepContextEval!=null){
-                contextKept = keepContextEval.invoke(context, includeContextExpression);
+                contextKept = keepContextEval.invoke(contextModel, includeContextExpression);
             }
-
             if(!contextKept){
                 log.info("Context discarded.");
                 continue;
             }
 
-            log.info("Context " + i + ": " + context);
+            log.info("Context " + i + ": " + contextModel);
 
             // build the content
-            StringWriter content = contentMerger.mergeTemplateIntoStringWriter(tfc.asReader(), context);
+            StringWriter content = contentMerger.mergeTemplateIntoStringWriter(tfc.asReader(), contextModel);
 
             // store the file
-            String fileName = fileNameMerger.mergeTemplateIntoStringWriter(this.fileNameTemplate, context).toString();
             fs.storeContentToFile(content, fileName);
 
         }

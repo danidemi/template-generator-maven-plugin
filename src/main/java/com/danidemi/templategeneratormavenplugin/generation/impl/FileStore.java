@@ -1,4 +1,4 @@
-package com.danidemi.templategeneratormavenplugin.generation;
+package com.danidemi.templategeneratormavenplugin.generation.impl;
 
 /*-
  * #%L

@@ -20,10 +20,17 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
-import java.util.Map;
+import com.danidemi.templategeneratormavenplugin.model.IRowModel;
 
-public interface RowFilter {
+import java.util.function.Predicate;
 
-    boolean keep(Map<String, Object> context);
+public interface RowFilter extends Predicate<IRowModel> {
+
+    boolean keep(IRowModel row);
+
+    default boolean test(IRowModel t){
+        return keep(t);
+    }
+
 
 }

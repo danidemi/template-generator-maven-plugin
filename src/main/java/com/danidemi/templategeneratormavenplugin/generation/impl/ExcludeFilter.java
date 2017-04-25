@@ -1,4 +1,4 @@
-package com.danidemi.templategeneratormavenplugin.generation;
+package com.danidemi.templategeneratormavenplugin.generation.impl;
 
 /*-
  * #%L
@@ -20,25 +20,19 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
-import java.util.Map;
+import com.danidemi.templategeneratormavenplugin.generation.RowFilter;
+import com.danidemi.templategeneratormavenplugin.model.IRowModel;
 
-public class JuelRowFilter implements RowFilter {
+public class ExcludeFilter implements RowFilter {
 
-    private final String includeRowExpression;
+    private final RowFilter rowFilter;
 
-    public JuelRowFilter(String includeRowExpression) {
-        this.includeRowExpression = includeRowExpression;
+    public ExcludeFilter(RowFilter rowFilter) {
+        this.rowFilter = rowFilter;
     }
 
-    @Override public boolean keep(Map<String, Object> contextt) {
-
-        String includeRowExpression = this.includeRowExpression;
-        Class<Boolean> aClass = Boolean.class;
-
-        Boolean result = new JuelEval<Boolean>().invoke(contextt, includeRowExpression);
-
-        return result;
-
+    @Override public boolean keep(IRowModel context) {
+        return !rowFilter.keep(context);
     }
 
 }

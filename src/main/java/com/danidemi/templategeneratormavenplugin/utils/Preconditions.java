@@ -28,6 +28,10 @@ public class Preconditions {
         }
     }
 
+    public static void checkState(boolean condition) {
+        checkState(condition,"Illegal state.");
+    }
+
     public static void checkArgument(boolean trueCondition, String template, Object... theParam) {
         if(!trueCondition) {
             throw new IllegalArgumentException(String.format(template, theParam));
@@ -37,5 +41,9 @@ public class Preconditions {
     public static <T> T validateArgumentNotNull(T argument) {
         checkArgument(argument != null, "Null argument");
         return argument;
+    }
+
+    public static void checkArgument(boolean trueCondition) {
+        checkArgument(trueCondition, "Illegal argument.");
     }
 }

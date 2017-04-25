@@ -1,4 +1,4 @@
-package com.danidemi.templategeneratormavenplugin.generation;
+package com.danidemi.templategeneratormavenplugin.generation.impl;
 
 /*-
  * #%L
@@ -19,9 +19,6 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * limitations under the License.
  * #L%
  */
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class StringBonification {
 

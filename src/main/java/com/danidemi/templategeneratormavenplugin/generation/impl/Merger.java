@@ -1,4 +1,4 @@
-package com.danidemi.templategeneratormavenplugin.generation;
+package com.danidemi.templategeneratormavenplugin.generation.impl;
 
 /*-
  * #%L
@@ -20,11 +20,13 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
+import com.danidemi.templategeneratormavenplugin.generation.ContextCreator;
+import com.danidemi.templategeneratormavenplugin.model.ContextModel;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 
-import java.io.*;
-import java.util.Map;
+import java.io.Reader;
+import java.io.StringWriter;
 
 public class Merger {
 
@@ -38,32 +40,12 @@ public class Merger {
         this.fileStore = fileStore;
     }
 
-    public void merge() {
-
-        Reader templateReader = template.asReader();
-
-        // get the contexts
-        for (Map<String, Object> context : contexts) {
-
-            // build the content
-            StringWriter content = mergeTemplateIntoStringWriter(templateReader, context);
-
-            // store the file
-            String fileName = "thepath." + (int) (Math.random() * 100) + ".java";
-            fileStore.storeContentToFile(content, fileName);
-
-        }
-    }
-
-    public StringWriter mergeTemplateIntoStringWriter(Reader inputStreamReader, Map<String, Object> context) {
+    public StringWriter mergeTemplateIntoStringWriter(Reader inputStreamReader, ContextModel context) {
         StringWriter sw = new StringWriter();
         final VelocityContext vcontext = new VelocityContext();
-        context.forEach( (k,v) -> vcontext.put(k,v)  );
+        vcontext.put("source", context);
         Velocity.evaluate(vcontext, sw, "logtag", inputStreamReader);
         return sw;
     }
 
-    public StringWriter mergeTemplateIntoStringWriter(String inputStreamReader, Map<String, Object> context) {
-        return mergeTemplateIntoStringWriter( new StringReader(inputStreamReader), context );
-    }
 }

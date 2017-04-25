@@ -41,6 +41,8 @@ package com.danidemi.templategeneratormavenplugin;
  * #L%
  */
 
+import com.danidemi.templategeneratormavenplugin.model.ContextModelBuilder;
+
 import java.io.File;
 
 public class TestUtils {
@@ -50,6 +52,12 @@ public class TestUtils {
 
   public static File getPom(String filename) throws Exception {
     return new File(TestUtils.class.getResource(filename).toURI());
+  }
+
+  public static ContextModelBuilder mockPrototype() {
+    return new ContextModelBuilder()
+            .withTemplate(File.listRoots()[0])
+            .withSource(File.listRoots()[0]);
   }
 
 }
