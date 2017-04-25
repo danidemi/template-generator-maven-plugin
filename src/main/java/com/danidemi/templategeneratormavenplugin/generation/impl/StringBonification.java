@@ -1,4 +1,4 @@
-package com.danidemi.templategeneratormavenplugin.generation;
+package com.danidemi.templategeneratormavenplugin.generation.impl;
 
 /*-
  * #%L
@@ -20,11 +20,16 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
-import com.danidemi.templategeneratormavenplugin.model.ContextModel;
+public class StringBonification {
 
-/**
- * Implementations are able to provide a sequence of contexts.
- */
-public interface ContextCreator {
-    Iterable<ContextModel> contexts();
+    public static void main(String[] args) {
+        System.out.println( new StringBonification().bonify("@{row.BTBGClassName.startsWith(\"BG0000\") || row.parentClass.startWith(\"BG0000\")}") );
+    }
+
+    private String bonify(String s) {
+        //s.replaceAll("@\\{", "${");
+        //return Pattern.compile("@\\{").matcher(s).replaceAll(Matcher.quoteReplacement( "${" ));
+        return s.replace("@{", "${");
+    }
+
 }

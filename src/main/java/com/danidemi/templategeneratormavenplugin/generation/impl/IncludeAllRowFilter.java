@@ -1,4 +1,4 @@
-package com.danidemi.templategeneratormavenplugin.generation;
+package com.danidemi.templategeneratormavenplugin.generation.impl;
 
 /*-
  * #%L
@@ -20,11 +20,17 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
-import com.danidemi.templategeneratormavenplugin.model.ContextModel;
+import com.danidemi.templategeneratormavenplugin.model.IRowModel;
 
-/**
- * Implementations are able to provide a sequence of contexts.
- */
-public interface ContextCreator {
-    Iterable<ContextModel> contexts();
+import java.util.function.Predicate;
+
+public class IncludeAllRowFilter implements com.danidemi.templategeneratormavenplugin.generation.RowFilter, Predicate<IRowModel> {
+
+    @Override public boolean keep(IRowModel context) {
+        return true;
+    }
+
+    @Override public boolean test(IRowModel iRowModel) {
+        return keep(iRowModel);
+    }
 }

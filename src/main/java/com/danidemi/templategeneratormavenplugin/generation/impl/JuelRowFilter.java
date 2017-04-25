@@ -1,4 +1,4 @@
-package com.danidemi.templategeneratormavenplugin.generation;
+package com.danidemi.templategeneratormavenplugin.generation.impl;
 
 /*-
  * #%L
@@ -20,11 +20,20 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
-import com.danidemi.templategeneratormavenplugin.model.ContextModel;
+import com.danidemi.templategeneratormavenplugin.generation.RowFilter;
+import com.danidemi.templategeneratormavenplugin.model.IRowModel;
 
-/**
- * Implementations are able to provide a sequence of contexts.
- */
-public interface ContextCreator {
-    Iterable<ContextModel> contexts();
+import java.util.function.Predicate;
+
+public class JuelRowFilter implements RowFilter {
+
+    private final String includeRowExpression;
+
+    public JuelRowFilter(String includeRowExpression) {
+        this.includeRowExpression = includeRowExpression;
+    }
+
+    @Override public boolean keep(IRowModel row) {
+        return new JuelEval<Boolean>().invoke(includeRowExpression, "row", row);
+    }
 }

@@ -22,18 +22,10 @@ limitations under the License.
  * #L%
  */
 
-import java.util.Map;
+import com.danidemi.templategeneratormavenplugin.model.IRowModel;
 
-public class ExcludeFilter implements RowFilter {
-
-    private final RowFilter rowFilter;
-
-    public ExcludeFilter(RowFilter rowFilter) {
-        this.rowFilter = rowFilter;
-    }
-
-    @Override
-    public boolean keep(Map<String, Object> context) {
-        return !rowFilter.keep(context);
-    }
+/**
+ * Get rows from some source.
+ */
+public interface RowSource extends Iterable<IRowModel> {
 }

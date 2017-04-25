@@ -1,5 +1,9 @@
 Template-generator-maven-plugin
 ===============================
+[![The Apache License](https://img.shields.io/github/license/danidemi/template-generator-maven-plugin.svg?label=License)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Maven Central](https://img.shields.io/maven-central/v/com.danidemi/template-generator-maven-plugin.svg?label=Maven%20Central)](http://search.maven.org/#search%7Cga%7C1%7Ctemplate-generator-maven-plugin)
+[![Build Status](https://api.travis-ci.org/danidemi/template-generator-maven-plugin.svg?branch=master)](https://travis-ci.org/danidemi/template-generator-maven-plugin)
+
 
 A Maven plugin that generates code using template engines.
 
@@ -28,7 +32,7 @@ Git flow with following settings:
     <plugin>
         <groupId>com.danidemi</groupId>
         <artifactId>template-generator-maven-plugin</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.5</version>
     </plugin>
     
 ### Snapshot versions

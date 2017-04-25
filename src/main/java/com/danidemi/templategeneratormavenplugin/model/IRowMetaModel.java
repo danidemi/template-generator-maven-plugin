@@ -1,4 +1,4 @@
-package com.danidemi.templategeneratormavenplugin.generation;
+package com.danidemi.templategeneratormavenplugin.model;
 
 /*-
  * #%L
@@ -22,10 +22,16 @@ limitations under the License.
  * #L%
  */
 
-import java.util.Map;
+public interface IRowMetaModel {
 
-public class IncludeAllRowFilter implements com.danidemi.templategeneratormavenplugin.generation.RowFilter {
-    @Override public boolean keep(Map<String, Object> context) {
-        return true;
-    }
+    public long getCount();
+
+
+    public long getIndex();
+
+
+    public long getSourceIndex();
+
+
+    public long getSourceCount();
 }

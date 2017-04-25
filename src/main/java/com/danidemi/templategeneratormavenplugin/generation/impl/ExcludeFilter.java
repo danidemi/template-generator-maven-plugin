@@ -1,4 +1,4 @@
-package com.danidemi.templategeneratormavenplugin.generation;
+package com.danidemi.templategeneratormavenplugin.generation.impl;
 
 /*-
  * #%L
@@ -20,11 +20,19 @@ package com.danidemi.templategeneratormavenplugin.generation;
  * #L%
  */
 
-import com.danidemi.templategeneratormavenplugin.model.ContextModel;
+import com.danidemi.templategeneratormavenplugin.generation.RowFilter;
+import com.danidemi.templategeneratormavenplugin.model.IRowModel;
 
-/**
- * Implementations are able to provide a sequence of contexts.
- */
-public interface ContextCreator {
-    Iterable<ContextModel> contexts();
+public class ExcludeFilter implements RowFilter {
+
+    private final RowFilter rowFilter;
+
+    public ExcludeFilter(RowFilter rowFilter) {
+        this.rowFilter = rowFilter;
+    }
+
+    @Override public boolean keep(IRowModel context) {
+        return !rowFilter.keep(context);
+    }
+
 }

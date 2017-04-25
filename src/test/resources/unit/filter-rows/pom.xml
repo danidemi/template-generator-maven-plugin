@@ -13,6 +13,9 @@
         <plugins>
             <plugin>
                 <artifactId>template-generator-maven-plugin</artifactId>
+                <goals>
+                    <goal>generate</goal>
+                </goals>
                 <configuration>
                     <pathToCsv>src/test/resources/codeAndCountry.csv</pathToCsv>
                     <pathToTemplate>src/test/resources/unit/templates/CountryGreetings.txt.vm</pathToTemplate>
