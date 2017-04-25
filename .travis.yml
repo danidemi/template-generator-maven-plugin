@@ -1,7 +1,7 @@
 language: java
 jdk:
   - oraclejdk8
-script: "mvn --show-version --errors --batch-mode clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar -Dsonar.host.url=https://sonarqube.com -Dsonar.login=${SONAR_TOKEN}"
+script: "mvn --show-version --errors --batch-mode clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar -Dsonar.host.url=https://sonarqube.com -Dsonar.login=${SONAR_TOKEN} -Dsonar.organization=danidemi-github"
 cache:
     directories:
     - $HOME/.m2
