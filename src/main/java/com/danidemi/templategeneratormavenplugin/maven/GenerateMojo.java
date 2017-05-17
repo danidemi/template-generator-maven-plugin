@@ -152,11 +152,25 @@ public class GenerateMojo extends AbstractMojo {
 
             log.info("New context.");
 
-            // store the file
+            // generates the file name
             String fileName = fileNameMerger
                     .mergeTemplateIntoStringWriter(this.fileNameTemplate, contextModel)
                     .toString();
             log.info("Generated file: " + fileName);
+
+            // check if we can skip the generation
+            File destinationFile = fs.fileForFilename(fileName);
+            if(destinationFile.exists()) {
+
+                long templateLastModification = tfc.lastModified();
+                long fileLastModification = destinationFile.lastModified();
+
+                if(fileLastModification > templateLastModification) {
+                    log.info("File " + destinationFile.getAbsolutePath() + " already exists, newer than template, skipping.");
+                    continue;
+                }
+
+            }
 
             contextKept = true;
             if(keepContextEval!=null){
@@ -173,7 +187,7 @@ public class GenerateMojo extends AbstractMojo {
             StringWriter content = contentMerger.mergeTemplateIntoStringWriter(tfc.asReader(), contextModel);
 
             // store the file
-            fs.storeContentToFile(content, fileName);
+            fs.storeContentToFile(content, destinationFile);
 
         }
 

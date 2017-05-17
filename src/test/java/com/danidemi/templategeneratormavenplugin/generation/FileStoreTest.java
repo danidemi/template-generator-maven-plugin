@@ -22,6 +22,7 @@ package com.danidemi.templategeneratormavenplugin.generation;
 
 import com.danidemi.templategeneratormavenplugin.generation.impl.FileStore;
 import org.codehaus.plexus.util.FileUtils;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -40,17 +41,20 @@ public class FileStoreTest {
 
     @Rule public TemporaryFolder tmp = new TemporaryFolder();
     @Rule public TestName testName = new TestName();
+    private File folderForTest;
+    private FileStore sut;
+
+    @Before
+    public void setUp() {
+        folderForTest = new File(tmp.getRoot(), testName.getMethodName());
+        folderForTest.mkdirs();
+
+        sut = new FileStore(folderForTest);
+    }
 
     @Test public void storeFileWithPathInName() throws Exception {
 
-        // given
-        File folderForTest = new File(tmp.getRoot(), testName.getMethodName());
-        folderForTest.mkdirs();
-
-        FileStore sut = new FileStore(folderForTest);
-
-        StringWriter s = new StringWriter();
-        s.append("Hello Aliens.");
+        StringWriter s = aWriterWithContent("Hello Aliens.");
         String fileName = "this/is/a/package/out.java";
 
         // when
@@ -66,16 +70,19 @@ public class FileStoreTest {
 
     }
 
+    private StringWriter aWriterWithContent(String writerContent) {
+        StringWriter s = new StringWriter();
+        s.append(writerContent);
+        return s;
+    }
+
     @Test public void storeFileWithSimpleName() throws Exception {
 
         // given
         File folderForTest = new File(tmp.getRoot(), testName.getMethodName());
         folderForTest.mkdirs();
 
-        FileStore sut = new FileStore(folderForTest);
-
-        StringWriter s = new StringWriter();
-        s.append("Hello World.");
+        StringWriter s = aWriterWithContent("Hello World.");
         String fileName = "thepath." + (int) (Math.random() * 100) + ".java";
 
         // when

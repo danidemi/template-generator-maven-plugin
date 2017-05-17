@@ -37,19 +37,36 @@ public class FileStore {
         this.folder = baseFolder;
     }
 
-    public void storeContentToFile(StringWriter content, String fileName) {
+    public File storeContentToFile(StringWriter content, String fileName) {
+        File file = fileForFilename(fileName);
+        return _storeContentToFile(content, file);
+    }
 
-        String completePath = folder.getAbsolutePath() + (fileName.startsWith(File.separator) ? "" : File.separator) + fileName;
+    public File storeContentToFile(StringWriter content, File file) {
+        if(file.getAbsolutePath().startsWith(folder.getAbsolutePath())) {
+            throw new IllegalArgumentException( "File " + file.getAbsolutePath() + " is not under this store root " + folder.getAbsolutePath() + "." );
+        }
+        return _storeContentToFile(content, file);
+    }
 
-        try {
-            File file = new File( completePath );
-            File dir = file.getParentFile();
+    private File _storeContentToFile(StringWriter content, File file) {
+        File dir = file.getParentFile();
+        try{
             dir.mkdirs();
             FileUtils.fileWrite(file, content.toString());
+            return file;
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * The {@link File} corresponding to a filename to be stored under the base folder.
+     */
+    public File fileForFilename(String fileName) {
+        String completePath = folder.getAbsolutePath() + (fileName.startsWith(File.separator) ? "" : File.separator) + fileName;
+        return new File(completePath);
     }
 
 }
