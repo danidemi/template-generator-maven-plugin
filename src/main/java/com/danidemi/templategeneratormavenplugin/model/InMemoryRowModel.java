@@ -49,4 +49,10 @@ public class InMemoryRowModel implements IRowModel {
         result.put("meta", meta);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return RowModelUtils.describe(this);
+    }
+
 }

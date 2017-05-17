@@ -57,21 +57,21 @@ public class OneContextPerTagTest {
 
         // then
         {
-            // all rows about Ashley Delarosa
-            ContextModel ctx = ctxs.next();
-            List<IRowModel> rows = ctx.getRows();
-            assertRow(rows, 0, "HQ", "Dafne Nuvolari", "Ashley Delarosa");
-            assertRow(rows, 1, "Account", "Ashley Delarosa", "San Hye-young");
-            assertRow(rows, 2, "Account", "Ashley Delarosa", "Nabila Fahim");
-            assertEquals( rows.toString(),3, rows.size());
-        }
-        {
             // all rows about Dafne Nuvolari
             ContextModel ctx = ctxs.next();
             List<IRowModel> rows = ctx.getRows();
             assertRow(rows, 0, "HQ", "Dafne Nuvolari", "Ashley Delarosa");
             assertRow(rows, 1, "HQ", "Dafne Nuvolari", "Ciara Wright");
             assertRow(rows, 2, "HQ", "Dafne Nuvolari", "Ganda Ramasamy");
+            assertEquals( rows.toString(),3, rows.size());
+        }
+        {
+            // all rows about Ashley Delarosa
+            ContextModel ctx = ctxs.next();
+            List<IRowModel> rows = ctx.getRows();
+            assertRow(rows, 0, "HQ", "Dafne Nuvolari", "Ashley Delarosa");
+            assertRow(rows, 1, "Account", "Ashley Delarosa", "San Hye-young");
+            assertRow(rows, 2, "Account", "Ashley Delarosa", "Nabila Fahim");
             assertEquals( rows.toString(),3, rows.size());
         }
         {
@@ -144,9 +144,11 @@ public class OneContextPerTagTest {
         assertNotNull(expectedDepartment);
         assertNotNull(expectedHead);
         assertNotNull(expectedSubordinate);
-        assertEquals(rows.toString(), expectedDepartment, rows.get(index).getData().get("Department") );
-        assertEquals(rows.toString(), expectedHead, rows.get(index).getData().get("Head") );
-        assertEquals(rows.toString(), expectedSubordinate, rows.get(index).getData().get("Worker") );
+
+        IRowModel theRow = rows.get(index);
+        assertEquals(theRow.toString(), expectedHead, theRow.getData().get("Head") );
+        assertEquals(theRow.toString(), expectedSubordinate, theRow.getData().get("Worker") );
+        assertEquals(theRow.toString(), expectedDepartment, theRow.getData().get("Department") );
     }
 
 }

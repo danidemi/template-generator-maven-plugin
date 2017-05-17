@@ -48,7 +48,7 @@ public class OneContextPerTag implements ContextCreator {
 
         for (IRowModel iRowModel : rowSource) {
 
-            Set<String> tagsForRow = new HashSet<>();
+            Set<String> tagsForRow = new LinkedHashSet<>();
             for (String tagExpression : tagExpressions) {
                 tagExpression = tagExpression.replace("@{", "${");
                 String tag = new JuelEval<String>().invoke(tagExpression, "row", iRowModel);
@@ -68,8 +68,8 @@ public class OneContextPerTag implements ContextCreator {
         }
 
         List<ContextModel> contexts = new ArrayList<>();
-        for (ContextModelBuilder builder : tag2context.values()) {
-            contexts.add( builder.build() );
+        for (Map.Entry<String, ContextModelBuilder> contextEntry : tag2context.entrySet()) {
+            contexts.add( contextEntry.getValue().build() );
         }
 
         return contexts;

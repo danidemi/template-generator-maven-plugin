@@ -25,6 +25,7 @@ limitations under the License.
 import com.danidemi.templategeneratormavenplugin.generation.RowSource;
 import com.danidemi.templategeneratormavenplugin.model.IRowMetaModel;
 import com.danidemi.templategeneratormavenplugin.model.IRowModel;
+import com.danidemi.templategeneratormavenplugin.model.RowModelUtils;
 import com.danidemi.templategeneratormavenplugin.utils.TransformIteratorAdapter;
 import com.google.common.base.Function;
 import org.apache.commons.csv.CSVFormat;
@@ -107,6 +108,11 @@ public class CsvRowSource implements RowSource {
                     return record.getRecordNumber();
                 }
             };
+        }
+
+        @Override
+        public String toString() {
+            return RowModelUtils.describe(this);
         }
 
     }
