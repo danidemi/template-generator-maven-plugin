@@ -43,8 +43,8 @@ public class FileStore {
     }
 
     public File storeContentToFile(StringWriter content, File file) {
-        if(file.getAbsolutePath().startsWith(folder.getAbsolutePath())) {
-            throw new IllegalArgumentException( "File " + file.getAbsolutePath() + " is not under this store root " + folder.getAbsolutePath() + "." );
+        if(!file.getAbsolutePath().startsWith(folder.getAbsolutePath())) {
+            throw new IllegalArgumentException( "File '" + file.getAbsolutePath() + "' is not under this store root '" + folder.getAbsolutePath() + "'." );
         }
         return _storeContentToFile(content, file);
     }
