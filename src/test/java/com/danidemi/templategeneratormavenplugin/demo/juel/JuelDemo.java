@@ -110,7 +110,7 @@ public class JuelDemo {
         factory.createValueExpression(context, "${bar}", int.class).setValue(context, 1);
 
         // get value for our expression
-        assertThat( e.getValue(context), equalTo(1) );
+        assertThat( (int)e.getValue(context), equalTo(1) );
 
     }
 

@@ -26,7 +26,6 @@ import org.junit.Test;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -43,9 +42,7 @@ public class FilterIteratorAdapterTest {
         Iterator<String> iterator = countries.iterator();
 
         // when
-        FilterIteratorAdapter<String> newIterator = new FilterIteratorAdapter<>(iterator, s -> {
-            return s.contains("/EU");
-        });
+        FilterIteratorAdapter<String> newIterator = new FilterIteratorAdapter<>(iterator, containsEuPredicate());
 
         // then
         assertTrue( newIterator.hasNext() );
@@ -58,6 +55,15 @@ public class FilterIteratorAdapterTest {
 
     }
 
+    private com.google.common.base.Predicate<String> containsEuPredicate() {
+        return new com.google.common.base.Predicate<String>(){
+            @Override
+            public boolean apply(String input) {
+                return input.contains("/EU");
+            }
+        };
+    }
+
     @Test
     public void shouldRunTheFullSequenceOfNexts() {
 
@@ -66,12 +72,7 @@ public class FilterIteratorAdapterTest {
         Iterator<String> iterator = countries.iterator();
 
         // when
-        FilterIteratorAdapter<String> newIterator = new FilterIteratorAdapter<>(iterator, new Predicate<String>() {
-            @Override
-            public boolean test(String s) {
-                return s.contains("/EU");
-            }
-        });
+        FilterIteratorAdapter<String> newIterator = new FilterIteratorAdapter<>(iterator, containsEuPredicate());
 
         // then
         assertThat( newIterator.next(), equalTo("Italy/EU")  );

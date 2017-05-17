@@ -26,6 +26,7 @@ import com.danidemi.templategeneratormavenplugin.generation.RowSource;
 import com.danidemi.templategeneratormavenplugin.model.IRowMetaModel;
 import com.danidemi.templategeneratormavenplugin.model.IRowModel;
 import com.danidemi.templategeneratormavenplugin.utils.TransformIteratorAdapter;
+import com.google.common.base.Function;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -33,7 +34,6 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.*;
-import java.util.function.Function;
 
 public class CsvRowSource implements RowSource {
 
@@ -50,7 +50,7 @@ public class CsvRowSource implements RowSource {
             CSVParser parser = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(reader);
 
             // get the headers
-            List<String> headersAsList = new ArrayList<>( parser.getHeaderMap().keySet() );
+            final List<String> headersAsList = new ArrayList<>( parser.getHeaderMap().keySet() );
 
             return new TransformIteratorAdapter<CSVRecord, IRowModel>(
                     parser.iterator(),

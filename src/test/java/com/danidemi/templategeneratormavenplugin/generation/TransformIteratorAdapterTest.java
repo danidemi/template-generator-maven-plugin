@@ -21,11 +21,11 @@ package com.danidemi.templategeneratormavenplugin.generation;
  */
 
 import com.danidemi.templategeneratormavenplugin.utils.TransformIteratorAdapter;
+import com.google.common.base.Function;
 import org.junit.Test;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.function.Function;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;

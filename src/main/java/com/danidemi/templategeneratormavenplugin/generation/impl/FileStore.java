@@ -22,7 +22,9 @@ package com.danidemi.templategeneratormavenplugin.generation.impl;
 
 import org.codehaus.plexus.util.FileUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
 
 /**
  * Store a generated source.

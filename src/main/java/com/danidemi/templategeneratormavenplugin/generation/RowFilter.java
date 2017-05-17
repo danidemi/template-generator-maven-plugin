@@ -21,16 +21,14 @@ package com.danidemi.templategeneratormavenplugin.generation;
  */
 
 import com.danidemi.templategeneratormavenplugin.model.IRowModel;
+import com.google.common.base.Predicate;
 
-import java.util.function.Predicate;
 
 public interface RowFilter extends Predicate<IRowModel> {
 
     boolean keep(IRowModel row);
 
-    default boolean test(IRowModel t){
-        return keep(t);
-    }
+    boolean test(IRowModel t);
 
 
 }

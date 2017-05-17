@@ -43,7 +43,7 @@ public class ExcludeFilterTest {
 
         IRowModel row = null;
         assertThat( new ExcludeFilter(new IncludeAllRowFilter(){
-            @Override public boolean keep(IRowModel context) {
+            @Override public boolean apply(IRowModel context) {
                 return false;
             }
         }).keep(row), is(true) );

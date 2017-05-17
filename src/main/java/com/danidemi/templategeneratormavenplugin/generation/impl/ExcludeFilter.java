@@ -23,7 +23,7 @@ package com.danidemi.templategeneratormavenplugin.generation.impl;
 import com.danidemi.templategeneratormavenplugin.generation.RowFilter;
 import com.danidemi.templategeneratormavenplugin.model.IRowModel;
 
-public class ExcludeFilter implements RowFilter {
+public class ExcludeFilter extends GuavaPredicateRowFilter {
 
     private final RowFilter rowFilter;
 
@@ -31,8 +31,9 @@ public class ExcludeFilter implements RowFilter {
         this.rowFilter = rowFilter;
     }
 
-    @Override public boolean keep(IRowModel context) {
-        return !rowFilter.keep(context);
+    @Override
+    public boolean apply(IRowModel row) {
+        return !rowFilter.apply(row);
     }
 
 }

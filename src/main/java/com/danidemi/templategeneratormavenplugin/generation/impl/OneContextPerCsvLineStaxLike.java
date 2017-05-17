@@ -27,10 +27,10 @@ import com.danidemi.templategeneratormavenplugin.model.ContextModelBuilder;
 import com.danidemi.templategeneratormavenplugin.model.IRowMetaModel;
 import com.danidemi.templategeneratormavenplugin.model.IRowModel;
 import com.danidemi.templategeneratormavenplugin.utils.TransformIteratorAdapter;
+import com.google.common.base.Function;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.function.Function;
 
 import static com.danidemi.templategeneratormavenplugin.utils.Preconditions.validateArgumentNotNull;
 

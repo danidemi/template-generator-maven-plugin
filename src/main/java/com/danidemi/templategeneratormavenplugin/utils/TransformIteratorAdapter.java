@@ -20,8 +20,9 @@ package com.danidemi.templategeneratormavenplugin.utils;
  * #L%
  */
 
+import com.google.common.base.Function;
+
 import java.util.Iterator;
-import java.util.function.Function;
 
 import static com.danidemi.templategeneratormavenplugin.utils.Preconditions.validateArgumentNotNull;
 
@@ -30,11 +31,11 @@ import static com.danidemi.templategeneratormavenplugin.utils.Preconditions.vali
  */
 public class TransformIteratorAdapter<Original, Tranformed> implements Iterator<Tranformed> {
 
-    private final Iterator<Original> iterator;
     private final Function<Original, Tranformed> mappingFunction;
+    private final Iterator<Original> iterator;
 
     public TransformIteratorAdapter(Iterator<Original> iterator, Function<Original, Tranformed> mappingFunction) {
-        this.iterator = validateArgumentNotNull(iterator);
+        this.iterator = iterator;
         this.mappingFunction = validateArgumentNotNull(mappingFunction);
     }
 
@@ -47,5 +48,10 @@ public class TransformIteratorAdapter<Original, Tranformed> implements Iterator<
     public Tranformed next() {
         Original next = iterator.next();
         return mappingFunction.apply(next);
+    }
+
+    @Override
+    public void remove() {
+        iterator.remove();
     }
 }
