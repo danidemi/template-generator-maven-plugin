@@ -21,6 +21,7 @@ package com.danidemi.templategeneratormavenplugin.generation;
  */
 
 import com.danidemi.templategeneratormavenplugin.utils.TransformIteratorAdapter;
+import com.google.common.base.Function;
 import org.junit.Test;
 
 import java.util.Iterator;
@@ -37,7 +38,12 @@ public class TransformIteratorAdapterTest {
 
         Iterator<String> planets = asList("Earth", "Mars", "Neptune").iterator();
 
-        TransformIteratorAdapter<String, Integer> sut = new TransformIteratorAdapter<>(planets, p -> p.length());
+        TransformIteratorAdapter<String, Integer> sut = new TransformIteratorAdapter<>(planets, new Function<String, Integer>() {
+            @Override
+            public Integer apply(String p) {
+                return p.length();
+            }
+        });
 
         assertTrue( sut.hasNext() );
         assertEquals( 5, sut.next().intValue() );

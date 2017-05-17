@@ -52,11 +52,11 @@ public class JuelEval<T> {
 
     private Object eval(String expression, Map<String, Object> map) {
         SimpleContext juelContext = new SimpleContext();
-        map.entrySet().forEach( (e)->{
-            String key = e.getKey();
-            Object value = e.getValue();
+        for (Map.Entry<String, Object> stringObjectEntry : map.entrySet()) {
+            String key = stringObjectEntry.getKey();
+            Object value = stringObjectEntry.getValue();
             juelContext.setVariable(key, factory.createValueExpression(value, value.getClass()));
-        } );
+        }
         ValueExpression e = factory.createValueExpression(juelContext, expression, Object.class);
         return e.getValue(juelContext);
     }

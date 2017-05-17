@@ -22,15 +22,11 @@ package com.danidemi.templategeneratormavenplugin.generation.impl;
 
 import com.danidemi.templategeneratormavenplugin.model.IRowModel;
 
-import java.util.function.Predicate;
 
-public class IncludeAllRowFilter implements com.danidemi.templategeneratormavenplugin.generation.RowFilter, Predicate<IRowModel> {
+public class IncludeAllRowFilter extends GuavaPredicateRowFilter {
 
-    @Override public boolean keep(IRowModel context) {
+    @Override
+    public boolean apply(IRowModel input) {
         return true;
-    }
-
-    @Override public boolean test(IRowModel iRowModel) {
-        return keep(iRowModel);
     }
 }

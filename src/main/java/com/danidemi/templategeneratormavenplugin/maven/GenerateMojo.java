@@ -20,7 +20,9 @@ package com.danidemi.templategeneratormavenplugin.maven;
  * #L%
  */
 
-import com.danidemi.templategeneratormavenplugin.generation.*;
+import com.danidemi.templategeneratormavenplugin.generation.ContextCreator;
+import com.danidemi.templategeneratormavenplugin.generation.RowFilter;
+import com.danidemi.templategeneratormavenplugin.generation.RowSource;
 import com.danidemi.templategeneratormavenplugin.generation.impl.*;
 import com.danidemi.templategeneratormavenplugin.model.ContextModel;
 import com.danidemi.templategeneratormavenplugin.model.ContextModelBuilder;
@@ -110,7 +112,9 @@ public class GenerateMojo extends AbstractMojo {
         // row source
         RowSource rowSource;
         try {
-            rowSource = new FilteredRowSource( new CsvRowSource(new FileReader(new File(pathToCsv))), rowFilter );
+            rowSource = new FilteredRowSource(
+                    new CsvRowSource(new FileReader(new File(pathToCsv))),
+                    rowFilter );
         } catch (FileNotFoundException e) {
             throw new MojoExecutionException("An error occurred while accessing file '" + pathToCsv + "'", e);
         }
@@ -141,7 +145,7 @@ public class GenerateMojo extends AbstractMojo {
         EasyMerger fileNameMerger = new EasyMerger();
 
         // get the contexts
-        JuelEval<Boolean> keepContextEval = includeContextExpression!=null ? new JuelEval<>() : null;
+        JuelEval<Boolean> keepContextEval = includeContextExpression!=null ? new JuelEval<Boolean>() : null;
         int i = 0;
         boolean contextKept;
         for (ContextModel contextModel : contextCreator.contexts()) {

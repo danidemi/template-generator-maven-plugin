@@ -20,12 +20,9 @@ package com.danidemi.templategeneratormavenplugin.generation.impl;
  * #L%
  */
 
-import com.danidemi.templategeneratormavenplugin.generation.RowFilter;
 import com.danidemi.templategeneratormavenplugin.model.IRowModel;
 
-import java.util.function.Predicate;
-
-public class JuelRowFilter implements RowFilter {
+public class JuelRowFilter extends GuavaPredicateRowFilter {
 
     private final String includeRowExpression;
 
@@ -33,7 +30,8 @@ public class JuelRowFilter implements RowFilter {
         this.includeRowExpression = includeRowExpression;
     }
 
-    @Override public boolean keep(IRowModel row) {
+    @Override
+    public boolean apply(IRowModel row) {
         return new JuelEval<Boolean>().invoke(includeRowExpression, "row", row);
     }
 }
