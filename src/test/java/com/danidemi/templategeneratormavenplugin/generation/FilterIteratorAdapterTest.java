@@ -26,6 +26,7 @@ import org.junit.Test;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -42,7 +43,9 @@ public class FilterIteratorAdapterTest {
         Iterator<String> iterator = countries.iterator();
 
         // when
-        FilterIteratorAdapter<String> newIterator = new FilterIteratorAdapter<>(iterator, s -> s.contains("/EU"));
+        FilterIteratorAdapter<String> newIterator = new FilterIteratorAdapter<>(iterator, s -> {
+            return s.contains("/EU");
+        });
 
         // then
         assertTrue( newIterator.hasNext() );
@@ -63,7 +66,12 @@ public class FilterIteratorAdapterTest {
         Iterator<String> iterator = countries.iterator();
 
         // when
-        FilterIteratorAdapter<String> newIterator = new FilterIteratorAdapter<>(iterator, s -> s.contains("/EU"));
+        FilterIteratorAdapter<String> newIterator = new FilterIteratorAdapter<>(iterator, new Predicate<String>() {
+            @Override
+            public boolean test(String s) {
+                return s.contains("/EU");
+            }
+        });
 
         // then
         assertThat( newIterator.next(), equalTo("Italy/EU")  );

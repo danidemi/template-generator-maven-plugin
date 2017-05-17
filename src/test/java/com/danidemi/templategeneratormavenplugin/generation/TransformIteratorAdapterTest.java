@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.function.Function;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
@@ -37,7 +38,12 @@ public class TransformIteratorAdapterTest {
 
         Iterator<String> planets = asList("Earth", "Mars", "Neptune").iterator();
 
-        TransformIteratorAdapter<String, Integer> sut = new TransformIteratorAdapter<>(planets, p -> p.length());
+        TransformIteratorAdapter<String, Integer> sut = new TransformIteratorAdapter<>(planets, new Function<String, Integer>() {
+            @Override
+            public Integer apply(String p) {
+                return p.length();
+            }
+        });
 
         assertTrue( sut.hasNext() );
         assertEquals( 5, sut.next().intValue() );

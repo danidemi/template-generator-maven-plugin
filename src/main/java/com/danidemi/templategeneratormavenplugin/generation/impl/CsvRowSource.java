@@ -33,6 +33,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.*;
+import java.util.function.Function;
 
 public class CsvRowSource implements RowSource {
 
@@ -53,7 +54,12 @@ public class CsvRowSource implements RowSource {
 
             return new TransformIteratorAdapter<CSVRecord, IRowModel>(
                     parser.iterator(),
-                    r -> new CsvRowModel(r, headersAsList)
+                    new Function<CSVRecord, IRowModel>() {
+                        @Override
+                        public IRowModel apply(CSVRecord r) {
+                            return new CsvRowModel(r, headersAsList);
+                        }
+                    }
             );
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -73,7 +79,9 @@ public class CsvRowSource implements RowSource {
 
         @Override public Map<String, Object> getData() {
             HashMap mapped = new HashMap<Object, String>();
-            headersAsList.forEach( header -> mapped.put(header, record.get(header)) );
+            for (String header : headersAsList) {
+                mapped.put(header, record.get(header));
+            }
             return mapped;
         }
 
