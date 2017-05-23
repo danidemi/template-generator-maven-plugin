@@ -74,7 +74,6 @@ public class ContextModelBuilder implements Cloneable {
             // the rows
             if (iterable != null) {
                 model.setRows(iterable);
-                throw new UnsupportedOperationException("Iterable is not yet fully supported.");
             } else {
                 model.setRows(rows);
             }
