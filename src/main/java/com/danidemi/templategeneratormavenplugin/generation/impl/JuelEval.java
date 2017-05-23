@@ -42,7 +42,12 @@ public class JuelEval<T> {
     }
 
     public T invoke(ContextModel context, String includeRowExpression) {
-        return (T) invoke(includeRowExpression, "source", context);
+        //return (T) invoke(includeRowExpression, "source", context);
+        SimpleContext juelContext = new SimpleContext();
+        juelContext.setVariable("rows", factory.createValueExpression(context.getRows(), context.getRows().getClass()));
+        juelContext.setVariable("meta", factory.createValueExpression(context.getMeta(), context.getMeta().getClass()));
+        ValueExpression e = factory.createValueExpression(juelContext, includeRowExpression, Object.class);
+        return (T) e.getValue(juelContext);
     }
 
     public T invoke(Map<String, Object> row, String includeRowExpressionssion) {

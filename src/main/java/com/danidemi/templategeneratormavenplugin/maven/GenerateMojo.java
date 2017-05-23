@@ -26,6 +26,7 @@ import com.danidemi.templategeneratormavenplugin.generation.RowSource;
 import com.danidemi.templategeneratormavenplugin.generation.impl.*;
 import com.danidemi.templategeneratormavenplugin.model.ContextModel;
 import com.danidemi.templategeneratormavenplugin.model.ContextModelBuilder;
+import com.danidemi.templategeneratormavenplugin.model.RowModelUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -33,6 +34,8 @@ import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
+import javax.el.ELException;
+import javax.el.PropertyNotFoundException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -174,7 +177,13 @@ public class GenerateMojo extends AbstractMojo {
 
             contextKept = true;
             if(keepContextEval!=null){
-                contextKept = keepContextEval.invoke(contextModel, includeContextExpression);
+                try {
+                    contextKept = keepContextEval.invoke(contextModel, includeContextExpression);
+                }catch (ELException pnfe){
+                    throw new RuntimeException(
+                            String.format( "An error occurred while executing expression '%s' in following model:\n=====================\n%s\n=====================\nOriginal exception follows.", includeContextExpression, RowModelUtils.describe( contextModel ) ),
+                            pnfe);
+                }
             }
             if(!contextKept){
                 log.info("Context discarded.");

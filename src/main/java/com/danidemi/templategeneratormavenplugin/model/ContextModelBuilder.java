@@ -55,7 +55,7 @@ public class ContextModelBuilder implements Cloneable {
 
         if(model==null) {
 
-            checkState(iterable != null ^ rows != null, "You should set either an iterable over rows or the rows.");
+            //checkState(iterable != null ^ rows != null, "You should set either an iterable over rows or the rows.");
             checkState(template != null, "Please set the template file.");
             checkState(source != null, "Please set the source file.");
 
@@ -74,6 +74,7 @@ public class ContextModelBuilder implements Cloneable {
             // the rows
             if (iterable != null) {
                 model.setRows(iterable);
+                throw new UnsupportedOperationException("Iterable is not yet fully supported.");
             } else {
                 model.setRows(rows);
             }
