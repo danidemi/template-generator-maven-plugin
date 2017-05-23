@@ -27,7 +27,9 @@ import com.danidemi.templategeneratormavenplugin.generation.RowSource;
 import com.danidemi.templategeneratormavenplugin.model.ContextModel;
 import com.danidemi.templategeneratormavenplugin.model.ContextModelBuilder;
 import com.danidemi.templategeneratormavenplugin.model.IRowModel;
+import com.danidemi.templategeneratormavenplugin.model.RowModelUtils;
 
+import javax.el.ELException;
 import java.util.*;
 
 public class OneContextPerTag implements ContextCreator {
@@ -50,9 +52,22 @@ public class OneContextPerTag implements ContextCreator {
 
             Set<String> tagsForRow = new LinkedHashSet<>();
             for (String tagExpression : tagExpressions) {
-                tagExpression = tagExpression.replace("@{", "${");
-                String tag = new JuelEval<String>().invoke(tagExpression, "row", iRowModel);
-                tagsForRow.add(tag);
+                try {
+                    tagExpression = tagExpression.replace("@{", "${");
+                    String tag = new JuelEval<String>().invoke(tagExpression, "row", iRowModel);
+                    tagsForRow.add(tag);
+
+//                    System.out.println("===========================");
+//                    System.out.println(tagExpression);
+//                    System.out.println(RowModelUtils.describe( iRowModel ));
+//                    System.out.println("===========================");
+                }catch (ELException pnfe){
+                    throw new RuntimeException(
+                            String.format( "An error occurred while executing expression '%s' in following model:\n=====================\n%s\n=====================\nOriginal exception follows.", tagExpression, RowModelUtils.describe( iRowModel ) ),
+                            pnfe);
+                }
+
+
             }
 
             for (String tag : tagsForRow) {

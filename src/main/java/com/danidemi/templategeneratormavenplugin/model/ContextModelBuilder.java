@@ -69,7 +69,7 @@ public class ContextModelBuilder implements Cloneable {
             if (tags != null) {
                 metaModel.setTags(new LinkedHashSet<>(tags));
             }
-            model.setMetaModel(metaModel);
+            model.setMeta(metaModel);
 
             // the rows
             if (iterable != null) {

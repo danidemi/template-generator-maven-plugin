@@ -50,7 +50,7 @@ public class ContextModel {
         this.target = target;
     }
 
-    void setMetaModel(ContextMetaModel metaModel) {
+    void setMeta(ContextMetaModel metaModel) {
         this.meta = metaModel;
     }
 

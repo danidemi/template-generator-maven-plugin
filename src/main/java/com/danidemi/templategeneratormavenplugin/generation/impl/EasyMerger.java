@@ -37,7 +37,9 @@ public class EasyMerger {
     public StringWriter mergeTemplateIntoStringWriter(Reader inputStreamReader, ContextModel context) {
         StringWriter sw = new StringWriter();
         final VelocityContext vcontext = new VelocityContext();
-        vcontext.put("source", context);
+        //vcontext.put("source", context);
+        vcontext.put("rows", context.getRows());
+        vcontext.put("meta", context.getMeta());
         Velocity.evaluate(vcontext, sw, "logtag", inputStreamReader);
         return sw;
     }
