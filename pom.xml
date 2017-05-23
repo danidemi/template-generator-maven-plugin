@@ -5,7 +5,7 @@
 
     <groupId>com.danidemi</groupId>
     <artifactId>template-generator-maven-plugin</artifactId>
-    <version>0.0.6-SNAPSHOT</version>
+    <version>0.0.7-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
 
     <name>template-generator-maven-plugin</name>
@@ -225,7 +225,7 @@
                         <configuration>
                             <rules>
                                 <requireJavaVersion>
-                                    <message>This project should be compiled on JDK 1.7 because SOGEI have not yet migrated to 1.8</message>
+                                    <message>This project should be compiled on JDK 1.7</message>
                                     <version>[1.7.0,1.8.0)</version>
                                 </requireJavaVersion>
                             </rules>
