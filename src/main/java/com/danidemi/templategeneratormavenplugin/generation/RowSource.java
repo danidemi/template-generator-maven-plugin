@@ -3,8 +3,6 @@ package com.danidemi.templategeneratormavenplugin.generation;
 /*-
  * #%L
  * template-generator-maven-plugin
-$Id:$
-$HeadURL:$
  * %%
  * Copyright (C) 2017 Studio DaniDemi
  * %%

@@ -32,7 +32,7 @@ Git flow with following settings:
     <plugin>
         <groupId>com.danidemi</groupId>
         <artifactId>template-generator-maven-plugin</artifactId>
-        <version>0.0.5</version>
+        <version>0.0.7</version>
     </plugin>
     
 ### Snapshot versions
@@ -68,6 +68,7 @@ to use in a project, please enable this
 
     mvn versions:set
     mvn clean install
+    mvn versions:commit
     mvn clean deploy -P release
     mvn versions:set
 
