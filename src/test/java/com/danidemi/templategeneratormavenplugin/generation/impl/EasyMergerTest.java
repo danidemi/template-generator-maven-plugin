@@ -54,8 +54,8 @@ public class EasyMergerTest {
                 .build();
 
         // then
-        assertEquals( "john", getString(sut, ctx, "${source.rows[0].data.name}" ));
-        assertEquals( "3", getString(sut, ctx, "${source.rows.size()}" ));
+        assertEquals( "john", getString(sut, ctx, "${rows[0].data.name}" ));
+        assertEquals( "3", getString(sut, ctx, "${rows.size()}" ));
 
     }
 
