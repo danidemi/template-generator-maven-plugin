@@ -21,22 +21,22 @@ package com.danidemi.templategeneratormavenplugin.utils;
  */
 
 
+import com.google.common.base.Predicate;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.function.Predicate;
 
-public class FilterIteratorAdapter<E> implements Iterator<E> {
+public class FilterIteratorAdapter<E> extends AbstractDelegateIterator<E> {
 
     private final Predicate<E> filter;
-    private Iterator<E> iterator;
 
     private E next = null;
     private E ahead = null;
     private boolean aheasSet = false;
     private boolean hasNextBeenRetrieved = false;
 
-    public FilterIteratorAdapter(Iterator<E> iterator, java.util.function.Predicate<E> filter) {
-        this.iterator = iterator;
+    public FilterIteratorAdapter(Iterator<E> iterator, Predicate<E> filter) {
+        super(iterator);
         this.filter = filter;
     }
 
@@ -65,8 +65,8 @@ public class FilterIteratorAdapter<E> implements Iterator<E> {
         }else{
             boolean done = false;
             do {
-                next = iterator.next();
-                if( filter.test(next) ) {
+                next = delegate.next();
+                if( filter.apply(next) ) {
                     done = true;
                 }
             }while(done == false);
@@ -74,4 +74,5 @@ public class FilterIteratorAdapter<E> implements Iterator<E> {
         return next;
 
     }
+
 }

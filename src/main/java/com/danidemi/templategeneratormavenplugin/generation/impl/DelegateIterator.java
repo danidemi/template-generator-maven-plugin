@@ -3,6 +3,8 @@ package com.danidemi.templategeneratormavenplugin.generation.impl;
 /*-
  * #%L
  * template-generator-maven-plugin
+$Id:$
+$HeadURL:$
  * %%
  * Copyright (C) 2017 Studio DaniDemi
  * %%
@@ -20,27 +22,28 @@ limitations under the License.
  * #L%
  */
 
-import com.danidemi.templategeneratormavenplugin.model.IRowModel;
-import org.junit.Test;
+import java.util.Iterator;
 
-import java.io.InputStreamReader;
+public class DelegateIterator<E> implements Iterator<E> {
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
+    protected final Iterator<E> iterator;
 
-public class CsvRowSourceTest {
-
-    @Test public void testRows() {
-
-        // given
-        CsvRowSource sut = new CsvRowSource(new InputStreamReader(Object.class.getResourceAsStream("/codeAndCurrency.csv")));
-
-        // when
-        IRowModel next = sut.iterator().next();
-
-        // then
-        assertThat( next.getMeta().getIndex(), equalTo(0L) );
-        assertThat( next.getMeta().getCount(), equalTo(1L) );
+    public DelegateIterator(Iterator<E> iterator) {
+        this.iterator = iterator;
     }
 
+    @Override
+    public boolean hasNext() {
+        return iterator.hasNext();
+    }
+
+    @Override
+    public E next() {
+        return iterator.next();
+    }
+
+    @Override
+    public void remove() {
+        iterator.remove();
+    }
 }

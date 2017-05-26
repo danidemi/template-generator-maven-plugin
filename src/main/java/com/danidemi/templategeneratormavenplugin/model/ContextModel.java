@@ -3,8 +3,6 @@ package com.danidemi.templategeneratormavenplugin.model;
 /*-
  * #%L
  * template-generator-maven-plugin
-$Id:$
-$HeadURL:$
  * %%
  * Copyright (C) 2017 Studio DaniDemi
  * %%
@@ -50,7 +48,7 @@ public class ContextModel {
         this.target = target;
     }
 
-    void setMetaModel(ContextMetaModel metaModel) {
+    void setMeta(ContextMetaModel metaModel) {
         this.meta = metaModel;
     }
 

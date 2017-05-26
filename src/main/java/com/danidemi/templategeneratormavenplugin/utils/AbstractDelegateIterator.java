@@ -1,8 +1,10 @@
-package com.danidemi.templategeneratormavenplugin.model;
+package com.danidemi.templategeneratormavenplugin.utils;
 
 /*-
  * #%L
  * template-generator-maven-plugin
+$Id:$
+$HeadURL:$
  * %%
  * Copyright (C) 2017 Studio DaniDemi
  * %%
@@ -20,18 +22,28 @@ limitations under the License.
  * #L%
  */
 
-public class CountModel {
-    private final int rowCount;
+import java.util.Iterator;
 
-    CountModel(int rowCount) {
-        this.rowCount = rowCount;
+public abstract class AbstractDelegateIterator<E> implements Iterator<E> {
+
+    protected final Iterator<E> delegate;
+
+    public AbstractDelegateIterator(Iterator<E> delegate) {
+        this.delegate = delegate;
     }
 
-    public int getRows(){
-        return this.rowCount;
+    @Override
+    public boolean hasNext() {
+        return delegate.hasNext();
     }
 
-    public int getLastIndex(){
-        return getRows()-1;
+    @Override
+    public E next() {
+        return delegate.next();
+    }
+
+    @Override
+    public void remove() {
+        delegate.remove();
     }
 }

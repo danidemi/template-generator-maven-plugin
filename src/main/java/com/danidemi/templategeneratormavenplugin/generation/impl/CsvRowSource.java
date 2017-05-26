@@ -3,8 +3,6 @@ package com.danidemi.templategeneratormavenplugin.generation.impl;
 /*-
  * #%L
  * template-generator-maven-plugin
-$Id:$
-$HeadURL:$
  * %%
  * Copyright (C) 2017 Studio DaniDemi
  * %%
@@ -25,7 +23,9 @@ limitations under the License.
 import com.danidemi.templategeneratormavenplugin.generation.RowSource;
 import com.danidemi.templategeneratormavenplugin.model.IRowMetaModel;
 import com.danidemi.templategeneratormavenplugin.model.IRowModel;
+import com.danidemi.templategeneratormavenplugin.model.RowModelUtils;
 import com.danidemi.templategeneratormavenplugin.utils.TransformIteratorAdapter;
+import com.google.common.base.Function;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -49,11 +49,16 @@ public class CsvRowSource implements RowSource {
             CSVParser parser = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(reader);
 
             // get the headers
-            List<String> headersAsList = new ArrayList<>( parser.getHeaderMap().keySet() );
+            final List<String> headersAsList = new ArrayList<>( parser.getHeaderMap().keySet() );
 
             return new TransformIteratorAdapter<CSVRecord, IRowModel>(
                     parser.iterator(),
-                    r -> new CsvRowModel(r, headersAsList)
+                    new Function<CSVRecord, IRowModel>() {
+                        @Override
+                        public IRowModel apply(CSVRecord r) {
+                            return new CsvRowModel(r, headersAsList);
+                        }
+                    }
             );
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -73,7 +78,9 @@ public class CsvRowSource implements RowSource {
 
         @Override public Map<String, Object> getData() {
             HashMap mapped = new HashMap<Object, String>();
-            headersAsList.forEach( header -> mapped.put(header, record.get(header)) );
+            for (String header : headersAsList) {
+                mapped.put(header, record.get(header));
+            }
             return mapped;
         }
 
@@ -99,6 +106,11 @@ public class CsvRowSource implements RowSource {
                     return record.getRecordNumber();
                 }
             };
+        }
+
+        @Override
+        public String toString() {
+            return RowModelUtils.describe(this);
         }
 
     }

@@ -1,8 +1,10 @@
-package com.danidemi.templategeneratormavenplugin.generation.impl;
+package com.danidemi.templategeneratormavenplugin.model;
 
 /*-
  * #%L
  * template-generator-maven-plugin
+$Id:$
+$HeadURL:$
  * %%
  * Copyright (C) 2017 Studio DaniDemi
  * %%
@@ -20,27 +22,32 @@ limitations under the License.
  * #L%
  */
 
-import com.danidemi.templategeneratormavenplugin.model.IRowModel;
 import org.junit.Test;
 
-import java.io.InputStreamReader;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.*;
 
-public class CsvRowSourceTest {
+public class RowModelUtilsTest {
 
-    @Test public void testRows() {
+    @Test
+    public void shouldDescribe() throws Exception {
 
         // given
-        CsvRowSource sut = new CsvRowSource(new InputStreamReader(Object.class.getResourceAsStream("/codeAndCurrency.csv")));
+        LinkedHashMap<String, Object> data = new LinkedHashMap<>();
+        data.put("k1", "v1");
+        data.put("k2", "v2");
+
+        RowMetaModel meta = new RowMetaModel(100, 120);
+        InMemoryRowModel rowModel = new InMemoryRowModel(data, meta);
 
         // when
-        IRowModel next = sut.iterator().next();
+        String describe = RowModelUtils.describe(rowModel);
 
         // then
-        assertThat( next.getMeta().getIndex(), equalTo(0L) );
-        assertThat( next.getMeta().getCount(), equalTo(1L) );
+        assertEquals( "{k1=v1, k2=v2 | count=100, sourceCount=120}", describe );
+
     }
 
 }

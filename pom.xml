@@ -5,7 +5,7 @@
 
     <groupId>com.danidemi</groupId>
     <artifactId>template-generator-maven-plugin</artifactId>
-    <version>0.0.5</version>
+    <version>0.0.7</version>
     <packaging>maven-plugin</packaging>
 
     <name>template-generator-maven-plugin</name>
@@ -40,7 +40,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <javaVersion>1.8</javaVersion>
+        <javaVersion>1.7</javaVersion>
         <maven.compiler.source>${javaVersion}</maven.compiler.source>
         <maven.compiler.target>${javaVersion}</maven.compiler.target>
         <mavenVersion>3.3.9</mavenVersion>
@@ -211,6 +211,30 @@
                     -->
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.4.1</version>
+                <executions>
+                    <execution>
+                        <id>enforce-java-7</id>
+                        <goals>
+                            <goal>display-info</goal>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <message>This project should be compiled on JDK 1.7</message>
+                                    <version>[1.7.0,1.8.0)</version>
+                                </requireJavaVersion>
+                            </rules>
+                            <fail>true</fail>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
     <profiles>

@@ -1,8 +1,10 @@
-package com.danidemi.templategeneratormavenplugin.model;
+package com.danidemi.templategeneratormavenplugin.generation;
 
 /*-
  * #%L
  * template-generator-maven-plugin
+$Id:$
+$HeadURL:$
  * %%
  * Copyright (C) 2017 Studio DaniDemi
  * %%
@@ -20,18 +22,8 @@ limitations under the License.
  * #L%
  */
 
-public class CountModel {
-    private final int rowCount;
+public interface Transformation<Original, Transformed> {
 
-    CountModel(int rowCount) {
-        this.rowCount = rowCount;
-    }
+    Transformed apply(Original original);
 
-    public int getRows(){
-        return this.rowCount;
-    }
-
-    public int getLastIndex(){
-        return getRows()-1;
-    }
 }

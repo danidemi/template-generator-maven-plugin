@@ -3,8 +3,6 @@ package com.danidemi.templategeneratormavenplugin.generation.impl;
 /*-
  * #%L
  * template-generator-maven-plugin
-$Id:$
-$HeadURL:$
  * %%
  * Copyright (C) 2017 Studio DaniDemi
  * %%
@@ -25,9 +23,9 @@ limitations under the License.
 import com.danidemi.templategeneratormavenplugin.generation.RowSource;
 import com.danidemi.templategeneratormavenplugin.model.IRowModel;
 import com.danidemi.templategeneratormavenplugin.utils.FilterIteratorAdapter;
+import com.google.common.base.Predicate;
 
 import java.util.Iterator;
-import java.util.function.Predicate;
 
 public class FilteredRowSource implements RowSource {
 

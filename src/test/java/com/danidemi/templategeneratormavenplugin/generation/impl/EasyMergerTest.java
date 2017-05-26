@@ -3,8 +3,6 @@ package com.danidemi.templategeneratormavenplugin.generation.impl;
 /*-
  * #%L
  * template-generator-maven-plugin
-$Id:$
-$HeadURL:$
  * %%
  * Copyright (C) 2017 Studio DaniDemi
  * %%
@@ -54,8 +52,8 @@ public class EasyMergerTest {
                 .build();
 
         // then
-        assertEquals( "john", getString(sut, ctx, "${source.rows[0].data.name}" ));
-        assertEquals( "3", getString(sut, ctx, "${source.rows.size()}" ));
+        assertEquals( "john", getString(sut, ctx, "${rows[0].data.name}" ));
+        assertEquals( "3", getString(sut, ctx, "${rows.size()}" ));
 
     }
 

@@ -42,7 +42,12 @@ public class JuelEval<T> {
     }
 
     public T invoke(ContextModel context, String includeRowExpression) {
-        return (T) invoke(includeRowExpression, "source", context);
+        //return (T) invoke(includeRowExpression, "source", context);
+        SimpleContext juelContext = new SimpleContext();
+        juelContext.setVariable("rows", factory.createValueExpression(context.getRows(), context.getRows().getClass()));
+        juelContext.setVariable("meta", factory.createValueExpression(context.getMeta(), context.getMeta().getClass()));
+        ValueExpression e = factory.createValueExpression(juelContext, includeRowExpression, Object.class);
+        return (T) e.getValue(juelContext);
     }
 
     public T invoke(Map<String, Object> row, String includeRowExpressionssion) {
@@ -52,11 +57,11 @@ public class JuelEval<T> {
 
     private Object eval(String expression, Map<String, Object> map) {
         SimpleContext juelContext = new SimpleContext();
-        map.entrySet().forEach( (e)->{
-            String key = e.getKey();
-            Object value = e.getValue();
+        for (Map.Entry<String, Object> stringObjectEntry : map.entrySet()) {
+            String key = stringObjectEntry.getKey();
+            Object value = stringObjectEntry.getValue();
             juelContext.setVariable(key, factory.createValueExpression(value, value.getClass()));
-        } );
+        }
         ValueExpression e = factory.createValueExpression(juelContext, expression, Object.class);
         return e.getValue(juelContext);
     }

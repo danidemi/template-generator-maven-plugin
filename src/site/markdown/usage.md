@@ -11,7 +11,7 @@ This is a brief description of the model.
                     "field-n": "value-of-header-n-in-row-1"
                 },
                 "meta": {
-                    "rowIndex": "0",
+                    "index": "0",
                     "rowCount": "1",
                     "sourceIndex": "0-based-index-of-row-1-in-the-source-file",
                     "sourceCount": "1-based-index-of-row-1-in-the-source-file"
@@ -24,7 +24,7 @@ This is a brief description of the model.
                     "field-n": "value-of-header-n-in-row-2"
                 },
                 "meta": {
-                    "rowIndex": "1",
+                    "index": "1",
                     "rowCount": "2",
                     "sourceIndex": "0-based-index-of-row-2-in-the-source-file",
                     "sourceCount": "1-based-index-of-row-2-in-the-source-file"
@@ -37,7 +37,7 @@ This is a brief description of the model.
                     "field-n": "value-of-header-n-in-row-m"
                 },
                 "meta": {
-                    "rowIndex": "m-1",
+                    "index": "m-1",
                     "rowCount": "m",
                     "sourceIndex": "0-based-index-of-row-m-in-the-source-file",
                     "sourceCount": "1-based-index-of-row-m-in-the-source-file"

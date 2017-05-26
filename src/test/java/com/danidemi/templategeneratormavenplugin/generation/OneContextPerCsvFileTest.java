@@ -60,20 +60,20 @@ public class OneContextPerCsvFileTest {
         IRowModel rowCtx = rows.next();
         assertThat( rowCtx.getMeta().getIndex(),      equalTo(0L) );
         assertThat( rowCtx.getMeta().getCount(),      equalTo(1L) );
-        assertThat( rowCtx.getData().get("Code"),     equalTo("EUR") );
-        assertThat( rowCtx.getData().get("Currency"), equalTo("Euro") );
+        assertThat( (String)rowCtx.getData().get("Code"),     equalTo("EUR") );
+        assertThat( (String)rowCtx.getData().get("Currency"), equalTo("Euro") );
 
         rowCtx = rows.next();
         assertThat( rowCtx.getMeta().getIndex(),      equalTo(1L) );
         assertThat( rowCtx.getMeta().getCount(),      equalTo(2L) );
-        assertThat( rowCtx.getData().get("Code"),     equalTo("USD") );
-        assertThat( rowCtx.getData().get("Currency"), equalTo("Dollar") );
+        assertThat( (String)rowCtx.getData().get("Code"),     equalTo("USD") );
+        assertThat( (String)rowCtx.getData().get("Currency"), equalTo("Dollar") );
 
         rowCtx = rows.next();
         assertThat( rowCtx.getMeta().getIndex(),      equalTo(2L) );
         assertThat( rowCtx.getMeta().getCount(),      equalTo(3L) );
-        assertThat( rowCtx.getData().get("Code"),     equalTo("GBP") );
-        assertThat( rowCtx.getData().get("Currency"), equalTo("Pound") );
+        assertThat( (String)rowCtx.getData().get("Code"),     equalTo("GBP") );
+        assertThat( (String)rowCtx.getData().get("Currency"), equalTo("Pound") );
 
         assertThat(ctxIt.hasNext(), is(false));
 

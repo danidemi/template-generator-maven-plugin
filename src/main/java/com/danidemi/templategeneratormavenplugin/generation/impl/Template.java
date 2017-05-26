@@ -57,4 +57,10 @@ public class Template {
         return inputStreamReader;
     }
 
+    /**
+     * Returns the time that the template was last modified.
+     */
+    public long lastModified() {
+        return templateLocator.lastModified();
+    }
 }

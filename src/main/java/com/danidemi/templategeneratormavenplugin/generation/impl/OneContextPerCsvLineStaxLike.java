@@ -22,15 +22,12 @@ package com.danidemi.templategeneratormavenplugin.generation.impl;
 
 import com.danidemi.templategeneratormavenplugin.generation.ContextCreator;
 import com.danidemi.templategeneratormavenplugin.generation.RowSource;
-import com.danidemi.templategeneratormavenplugin.model.ContextModel;
-import com.danidemi.templategeneratormavenplugin.model.ContextModelBuilder;
-import com.danidemi.templategeneratormavenplugin.model.IRowMetaModel;
-import com.danidemi.templategeneratormavenplugin.model.IRowModel;
+import com.danidemi.templategeneratormavenplugin.model.*;
 import com.danidemi.templategeneratormavenplugin.utils.TransformIteratorAdapter;
+import com.google.common.base.Function;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.function.Function;
 
 import static com.danidemi.templategeneratormavenplugin.utils.Preconditions.validateArgumentNotNull;
 
@@ -99,6 +96,11 @@ public class OneContextPerCsvLineStaxLike implements ContextCreator {
 
         @Override public IRowMetaModel getMeta() {
             return delegateModel;
+        }
+
+        @Override
+        public String toString() {
+            return RowModelUtils.describe(this);
         }
     }
 
